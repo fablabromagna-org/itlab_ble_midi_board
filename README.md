@@ -35,7 +35,13 @@ When the UP switch is pressed, both inputs are pulled down
 I program the ESP32 using Arduino IDE and libraries. See the code under the source directory
 
 
+Tested on Android 6, iOS 11 and Linux Debian 10.
 
+For debug purpose I suggest the following utilities to verify if your device can receive midi messages:
+
+* midiscope for Android
+* midiwrench for iOS
+* JACK  + a2jmidid + qsynth  for Linux
 
 ## Credits
 Copyright (C) 2020 Ivan Tarozzi (itarozzi@gmail.com) 
