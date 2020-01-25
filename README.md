@@ -24,6 +24,8 @@ The FS3X has a 6,35mm Jack Stereo output.
 
 I pulled up 2 DI of ESP32 and I use the tip and the ring of the Jack to pull low the ESP32 inputs
 
+![schema1](docs/schema1.jpg)
+
 When the UP switch is pressed, both inputs are pulled down
 
 ![breadboard](docs/img3.jpg)
