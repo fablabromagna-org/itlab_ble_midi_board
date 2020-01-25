@@ -17,12 +17,16 @@ I created this project to control music and guitar applications, but you can use
 ## The Hardware
 
 In this first version I use a DigiTech FS3X footswitch connected to a Wemos D1 R32 ESP32 board
+![DigiTech_FS3X](docs/img1.jpg)
 
-The FS3X has a 6,35mm Jack Stereo output where pins are connected as described in github page.
+The FS3X has a 6,35mm Jack Stereo output.
+![DigiTech_FS3X_inside](docs/img2.jpg)
+
 I pulled up 2 DI of ESP32 and I use the tip and the ring of the Jack to pull low the ESP32 inputs
 
 When the UP switch is pressed, both inputs are pulled down
 
+![breadboard](docs/img3.jpg)
 
 
 
@@ -35,4 +39,7 @@ I program the ESP32 using Arduino IDE and libraries. See the code under the sour
 
 ## Credits
 Copyright (C) 2020 Ivan Tarozzi (itarozzi@gmail.com) 
+
 [https://github.com/itarozzi/itlab_ble_midi_board]
+
+All the project files, sources and documents are released as open source and free software
