@@ -1,7 +1,10 @@
 # ITLab BLE MIDI Board
 
- A BLE (Bluetooth Low Energy) MIDI implementation based on ESP32
+A BLE (Bluetooth Low Energy) MIDI implementation based on ESP32
 
+ 
+> Disclaimer: 
+> this is a working-in-progress project at very early stage. I hope to implement new feature and a new hardware soon
  
 ## Description
  
@@ -19,6 +22,8 @@ The FS3X has a 6,35mm Jack Stereo output where pins are connected as described i
 I pulled up 2 DI of ESP32 and I use the tip and the ring of the Jack to pull low the ESP32 inputs
 
 When the UP switch is pressed, both inputs are pulled down
+
+
 
 
 ## The Software
