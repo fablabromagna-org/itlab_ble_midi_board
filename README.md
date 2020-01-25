@@ -41,7 +41,7 @@ For debug purpose I suggest the following utilities to verify if your device can
 
 * midiscope for Android
 * midiwrench for iOS
-* JACK  + a2jmidid + qsynth  for Linux
+* JACK  + kmidimon  for Linux
 
 ## Credits
 Copyright (C) 2020 Ivan Tarozzi (itarozzi@gmail.com) 
