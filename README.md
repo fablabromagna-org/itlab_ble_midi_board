@@ -29,18 +29,18 @@ You can find implementation details on [docs](/docs) folder.
 ## The Hardware
 
 In this first version I use a DigiTech FS3X footswitch connected to a Wemos D1 R32 ESP32 board
-![DigiTech_FS3X](docs/img1.jpg)
+![DigiTech_FS3X](docs/images/img1.jpg)
 
 The FS3X has a 6,35mm Jack Stereo output.
-![DigiTech_FS3X_inside](docs/img2.jpg)
+![DigiTech_FS3X_inside](docs/images/img2.jpg)
 
 I pulled up 2 DI of ESP32 and I use the tip and the ring of the Jack to pull low the ESP32 inputs
 
-![schema1](docs/schema1.jpg)
+![schema1](docs/images/schema1.jpg)
 
 When the UP switch is pressed, both inputs are pulled down
 
-![breadboard](docs/img3.jpg)
+![breadboard](docs/images/img3.jpg)
 
 
 
