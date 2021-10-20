@@ -1,4 +1,4 @@
-# BLE MIDI Foot Controller (waiting for a new name...)
+# ITLab BLE MIDI Board
 
 A BLE (Bluetooth Low Energy) MIDI implementation based on ESP32
 
@@ -6,23 +6,11 @@ A BLE (Bluetooth Low Energy) MIDI implementation based on ESP32
 > Disclaimer: 
 > this is a working-in-progress project at very early stage. I hope to implement new feature and a new hardware soon
  
- 
 ## Description
  
 This project aim to build a BLE MIDI Pedal Board using a cheap ESP32 
  
 I created this project to control music and guitar applications, but you can use it for any BLE MIDI compatible application ;)
-
-
-This project is born as personal project, but now it has become a project of Fablab Romagna APS, with the contribution of other FLR members.
-You can found the original README file describing the old implementation [here](./README_OLD.md) .
-
-
-Now the goal is to create a MIDI foot controller that will act as standard MIDI controller (MIDI BLE Server) or a device to connect to other MIDI device, as a smartphone or PC do (MIDI BLE client).
-
-The switch between the 2 modes should be implemented without reprogramming the firmware, and the MIDI messages assigned to each footswitch should be configured via sw.
-
-You can find implementation details on [docs](/docs) folder.
 
 
 
@@ -49,7 +37,7 @@ When the UP switch is pressed, both inputs are pulled down
 I program the ESP32 using Arduino IDE and libraries. See the code under the source directory
 
 
-Tested on Android 6, iOS 11 and Linux Debian.
+Tested on Android 6, iOS 11 and Linux Debian 10.
 
 For debug purpose I suggest the following utilities to verify if your device can receive midi messages:
 
@@ -58,6 +46,8 @@ For debug purpose I suggest the following utilities to verify if your device can
 * JACK  + kmidimon  for Linux
 
 ## Credits
-Copyright (C) 2021 Fablab Romagna (www.fablabromagna.org) 
+Copyright (C) 2020 Ivan Tarozzi (itarozzi@gmail.com) 
+
+[https://github.com/itarozzi/itlab_ble_midi_board]
 
 All the project files, sources and documents are released as open source and free software
