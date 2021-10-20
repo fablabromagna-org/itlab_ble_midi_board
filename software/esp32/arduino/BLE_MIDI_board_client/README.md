@@ -1,4 +1,4 @@
-ITLab_BLE_MIDI_board_client.ino
+BLE_MIDI_board_client.ino
 ===============================
 
 This is the Arduino source code for ESP32, acting as MIDI BLE client.
