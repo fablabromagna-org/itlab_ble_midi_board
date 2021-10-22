@@ -9,53 +9,38 @@ A BLE (Bluetooth Low Energy) MIDI implementation based on ESP32
  
 ## Description
  
-This project aim to build a BLE MIDI Pedal Board using a cheap ESP32 
+This project aim to build a BLE MIDI Pedal Board using a cheap ESP32, or similar microcontroller.
  
-I created this project to control music and guitar applications, but you can use it for any BLE MIDI compatible application ;)
+We created this project to control music and guitar applications, but you can use it for any BLE MIDI compatible application.
 
 
-This project is born as personal project, but now it has become a project of Fablab Romagna APS, with the contribution of other FLR members.
-You can found the original README file describing the old implementation [here](./README_OLD.md) .
+>This project is born as personal project, but now it has become a project of Fablab Romagna APS, with the contribution of other FLR members.
+>You can found the original README file describing the old implementation [here](./README_OLD.md) .
 
 
-Now the goal is to create a MIDI foot controller that will act as standard MIDI controller (MIDI BLE Server) or a device to connect to other MIDI device, as a smartphone or PC do (MIDI BLE client).
+We are developing a complete new project to create a MIDI foot controller that will work in two modes:
+1. **standard MIDI controller (MIDI BLE Server)**   - use it as external controller for your PC/smartphone//tablet/compatible device
 
-The switch between the 2 modes should be implemented without reprogramming the firmware, and the MIDI messages assigned to each footswitch should be configured via sw.
+2. **client MIDI device (MIDI BLE Client)** - use it to connect to BLE controller, acting as PC or smartphone/tablet
 
-You can find implementation details on [docs](/docs) folder.
-
-
-
-## The Hardware
-
-In this first version I use a DigiTech FS3X footswitch connected to a Wemos D1 R32 ESP32 board
-![DigiTech_FS3X](docs/images/img1.jpg)
-
-The FS3X has a 6,35mm Jack Stereo output.
-![DigiTech_FS3X_inside](docs/images/img2.jpg)
-
-I pulled up 2 DI of ESP32 and I use the tip and the ring of the Jack to pull low the ESP32 inputs
-
-![schema1](docs/images/schema1.jpg)
-
-When the UP switch is pressed, both inputs are pulled down
-
-![breadboard](docs/images/img3.jpg)
+The MIDI controller will consists on a series of monentary-on switches. The number of switches should be configured in the firmware.
 
 
-
-## The Software
-
-I program the ESP32 using Arduino IDE and libraries. See the code under the source directory
+Changing between the two modes should be implemented without reprogramming the firmware, and the MIDI messages assigned to each footswitch should be configured via sw.
 
 
-Tested on Android 6, iOS 11 and Linux Debian.
+As optional feature the MIDI controller could work also with standard DIN MIDI port or USB (this requires more HW or different microcontroller)
 
-For debug purpose I suggest the following utilities to verify if your device can receive midi messages:
 
-* midiscope for Android
-* midiwrench for iOS
-* JACK  + kmidimon  for Linux
+The controller should work in both rechargeable battery and line powered mode (5V).
+
+
+You can find implementation details on [docs](/docs) folder:
+
+
+* [The hardware](/hardware/README.md)
+* [The software](/software/README.md)
+
 
 ## Credits
 Copyright (C) 2021 Fablab Romagna (www.fablabromagna.org) 
