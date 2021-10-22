@@ -6,7 +6,7 @@ May be in the future we'll create a custom PCB with KiCad, a custom enclosure wi
 
 
 ## Footswitches and case
-Foot switches are momentary-on (normally open). You can use eny button, but metal foot switches are recommended 
+Foot switches are momentary-on (normally open). You can use any button, but metal foot switches are recommended 
 
 ![Footswitch](/docs/images/footswitch.jpg)
 
