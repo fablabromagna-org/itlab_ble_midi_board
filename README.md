@@ -22,7 +22,7 @@ We created this project to control music and guitar applications, but you can us
 
 We are developing a complete new project to create a MIDI foot controller that will work in two modes:
 
-**1.  standard MIDI controller (MIDI BLE Server)**   - use it as external controller for your PC/smartphone//tablet/compatible device
+**1.  standard MIDI controller (MIDI BLE Server)**   - use it as external controller for your PC/mobile/compatible device
 
 > you can use it, for example, to control a DAW or a GuitarFX or a looper running on PC/mobile
 
@@ -31,13 +31,7 @@ We are developing a complete new project to create a MIDI foot controller that w
 > you can use it, for example, to control a device like NUX Mighty, intead to use the original smartphone application
 
 
-The MIDI controller will consists of a series of monentary-on switches. The number of switches should be configured in the firmware.
-
-
-Changing between the two modes should be implemented without reprogramming the firmware
-
-MIDI messages assigned to each footswitch should be configured via software, without reprogramming the firmware.
-
+The MIDI controller will consists of a series of monentary-on switches. 
 
 As optional feature the MIDI controller could work also with standard DIN MIDI port or USB (this requires more HW or different microcontroller)
 
@@ -45,11 +39,20 @@ As optional feature the MIDI controller could work also with standard DIN MIDI p
 The controller should work in both rechargeable battery and line powered mode (5V).
 
 
-You can find implementation details on [docs](/docs) folder:
+### Configurable Over-The-Air
+The number of switches should be configured in the firmware.
 
+Changing between the two modes should be implemented without reprogramming the firmware
+
+MIDI messages assigned to each footswitch should be configured via software, without reprogramming the firmware.
+
+
+## Detailed Informations
 
 * [The hardware](/hardware/)
 * [The software](/software/)
+
+You can find implementation details on [docs](/docs) folder:
 
 
 ## Credits
