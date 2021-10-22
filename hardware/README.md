@@ -2,7 +2,7 @@
 
 In the prototipal stage we will use board and solutions available as kit or consumer product.
 
-May be in the future we'll create a custom PCB with KiCad, a custom enclosure with FreeCAD and 3d printer and a fancy decal with Inkscape.
+May be in the future we'll create a custom PCB with KiCad, a custom box with FreeCAD and 3d printer and a fancy decal with Inkscape.
 
 
 ## Footswitches and case
