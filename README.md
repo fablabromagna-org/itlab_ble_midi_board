@@ -1,5 +1,7 @@
 # BLE MIDI Foot Controller (waiting for a new name...)
 
+![ProjectImage](docs/images/project_image.png)
+
 A BLE (Bluetooth Low Energy) MIDI implementation based on ESP32
 
  
