@@ -38,8 +38,8 @@ The controller should work in both rechargeable battery and line powered mode (5
 You can find implementation details on [docs](/docs) folder:
 
 
-* [The hardware](/hardware/README.md)
-* [The software](/software/README.md)
+* [The hardware](/hardware/)
+* [The software](/software/)
 
 
 ## Credits
