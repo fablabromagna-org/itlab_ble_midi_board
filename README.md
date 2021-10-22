@@ -5,7 +5,7 @@
 A BLE (Bluetooth Low Energy) MIDI implementation based on ESP32
 
  
-> Disclaimer: 
+> Note: 
 > this is a working-in-progress project at very early stage. I hope to implement new feature and a new hardware soon
  
  
@@ -21,14 +21,22 @@ We created this project to control music and guitar applications, but you can us
 
 
 We are developing a complete new project to create a MIDI foot controller that will work in two modes:
-1. **standard MIDI controller (MIDI BLE Server)**   - use it as external controller for your PC/smartphone//tablet/compatible device
 
-2. **client MIDI device (MIDI BLE Client)** - use it to connect to BLE controller, acting as PC or smartphone/tablet
+**1.  standard MIDI controller (MIDI BLE Server)**   - use it as external controller for your PC/smartphone//tablet/compatible device
 
-The MIDI controller will consists on a series of monentary-on switches. The number of switches should be configured in the firmware.
+> you can use it, for example, to control a DAW or a GuitarFX or a looper running on PC/mobile
+
+**2. client MIDI device (MIDI BLE Client)** - use it to connect to BLE controller, acting as PC or smartphone/tablet
+
+> you can use it, for example, to control a device like NUX Mighty, intead to use the original smartphone application
 
 
-Changing between the two modes should be implemented without reprogramming the firmware, and the MIDI messages assigned to each footswitch should be configured via sw.
+The MIDI controller will consists of a series of monentary-on switches. The number of switches should be configured in the firmware.
+
+
+Changing between the two modes should be implemented without reprogramming the firmware
+
+MIDI messages assigned to each footswitch should be configured via software, without reprogramming the firmware.
 
 
 As optional feature the MIDI controller could work also with standard DIN MIDI port or USB (this requires more HW or different microcontroller)
