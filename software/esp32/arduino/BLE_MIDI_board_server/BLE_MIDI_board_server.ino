@@ -45,7 +45,7 @@
 
 const int midi_channel = 1;
 
-const int buttonPin1 = 4;     
+const int buttonPin1 = 36;     
 const int buttonPin2 = 39;
 
 const int cc_code_btn1 = 0x20;     
@@ -113,9 +113,15 @@ void setup() {
 
 void loop() {
 
-  int buttonState1 = digitalRead(buttonPin1);
-  int buttonState2 = digitalRead(buttonPin2);
+  int buttonState1 = !digitalRead(buttonPin1);
+  int buttonState2 = !digitalRead(buttonPin2);
   int cc_code = 0;
+
+
+  Serial.println("Button state"); 
+  Serial.println(buttonState1); 
+  Serial.println(buttonState2); 
+
  
   if (!buttonState1 && !buttonState2) {
     cc_code = cc_code_btn3;
