@@ -108,15 +108,15 @@ Ad esempio, una volta stabilito in che modo creare la UI di configurazione e com
 
 Quindi, alcuni dei macro-moduli in cui possiamo suddividere lo sviluppo sono:
 
-* definizione del formato di configurazione (JSON? bianrio? MIDI? - impatto anche sulla lettura da FW)
+* definizione del formato di configurazione (JSON? binario? MIDI? - impatto anche sulla lettura da FW)
 * definizione della modalità di configurazione (APP solo mobile? APP anche su PC? wireless o necessario USB? oppure come minimale applicazione WEB dentro ESP32 con server HTTP?)
 * SW APP Config: 
   * sviluppo applicazione
   * test di invio e feedback
   * eventuale configurazione del device a cui collegarsi, in modo BLE client
   * eventuali configurazioni aggiuntive o upgrade FW ?
-*  Firmware:
-  * gestione della ricezione configurazione da app esterna e salvataggio su flash/storage
+* Firmware:
+  * ricezione configurazione da app esterna e salvataggio su flash/storage
   * caricamento configurazione al boot
   * avvio della modalità BLE selezionata (con gestione della riconnessione in caso di errore)
   * gestione della pressione footswitch e gestione della modalità configurata
