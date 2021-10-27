@@ -130,3 +130,33 @@ Quindi, alcuni dei macro-moduli in cui possiamo suddividere lo sviluppo sono:
   
 
 
+## Modalità operativa
+Abbiamo deciso di utilizzare gli strumenti di GitHub per la gestione dei task di sviluppo e del relativo stato di avanzamento.
+
+### Projects
+Utilizziamo i "projects" per suddividere i task in 3 macro aree:
+- Hardware (schema elettrico, componenti, case )
+- Firmware (lo sviluppo su microcontrollore)
+- Software (lo sviluppo dell'app di configurazione)
+
+https://github.com/fablabromagna-org/itlab_ble_midi_board/projects
+
+
+### Issues
+Utilizziamo le "issues" per definire i vari task, corrispondenti a blocchi logici di sviluppo. 
+
+https://github.com/fablabromagna-org/itlab_ble_midi_board/issues
+
+Abbiamo predisposto una serie di template per definire le issues relative ai task di sviluppo.
+Più un template per la segnalazione di bugs
+
+Una prima suddivisione è già stata fatta, ma è in corso d'opera. Chiunque voglia definire un task aggiuntivo o farsi carico di una parte di sviluppo può aprire una issue.
+
+### Workflow
+- si crea una issue sul task su cui si vuole lavorare
+- si assegna label e project di riferimento (HW, SW, FW...)
+- ci si imposta come "assegnato a", per capire chi lavora su cosa
+- si utilizzo la board del project per notificare lo stato di avanzamento
+- si crea un nuovo proprio branch, possibilmente con nome che identifichi lo sviluppatore e il task
+- si sviluppa a piacere sul proprio branch. 
+- alla fine (o a step completati) si richiede il merge nel ramo principale del progetto
