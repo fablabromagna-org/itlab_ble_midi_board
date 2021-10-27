@@ -44,7 +44,7 @@ La configurazione può poi essere inviata al firmware che la salverà in flash.
 
 Potrebbe essere possibile salvare più di una configurazione eventualmente poi selezionabile da pulsante o encoder sul controller (in modo da avere ad esempio da preset1 a preset4 in flash per passare da uno all'altro senza riprogrammare ogni volta).
 
-La configurazione dei pulsanti e dei relativi comandi MIDI è indipendente dalla modalità MIDI BLE selezionata (client - server). Quest'ultima infatti serve solo a stabilire il collegamento tra i 2 dispositivo, ma una volta fatto il controller funzionerà sempre come MIDI-OUT.
+La configurazione dei pulsanti e dei relativi comandi MIDI è indipendente dalla modalità MIDI BLE selezionata (client - server). Quest'ultima infatti serve solo a stabilire il collegamento tra i 2 dispositivi, ma una volta fatto il controller funzionerà sempre come MIDI-OUT.
 
 > La modalità MIDI-IN potrebbe essere successivamente implementata per ricevere parametri di configurazione, ma non è utilizzata in normale funzionamento. 
 
