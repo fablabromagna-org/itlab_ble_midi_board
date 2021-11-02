@@ -75,7 +75,7 @@ I parametri aggiuntivi di questo evento saranno quindi:
 - MIDI Value:  il valore del CC o del PC
 
 
-### Incement
+### Increment
 Ad ogni tap/hold configurato in questo modo verrà inviato un comando MIDI il cui valore associato verrà incrementato/decrementato ad ogni invio.  Il fw dovrà quindi tenere traccia dell'ultimo valore inviato
 
 I parametri aggiuntivi di questo evento saranno quindi:
