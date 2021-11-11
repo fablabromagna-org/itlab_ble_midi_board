@@ -200,7 +200,7 @@ void loop() {
     midiMessage[0] = 0xb9; // header
     midiMessage[1] = 0xfd; // timestamp
     midiMessage[2] = 0xb0; // CC to channel 0
-    midiMessage[3] = 0x31; // controller 41 -> change preset channel
+    midiMessage[3] = 0x31; // controller 49 -> change preset channel
     midiMessage[4] = bank; // bank selected
     
     pRemoteCharacteristic->writeValue(midiMessage, 5);
