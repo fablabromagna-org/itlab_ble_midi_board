@@ -1,9 +1,9 @@
 # The Software
 
 ## Microcontroller Firmware
-We program the ESP32 using Arduino IDE and libraries. 
+We program the ESP32 using PlatformIO and Arduino libraries. 
 
-> May be we will do some test with PlatformIO or Micropython too.
+> May be we will do some test with  Micropython too.
 
 
 
