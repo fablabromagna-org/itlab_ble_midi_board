@@ -35,11 +35,10 @@
  *  updates by chegewara
 */
 
+#include <Arduino.h>
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEServer.h>
-
-
 #define SERVICE_UUID        "03b80e5a-ede8-4b33-a751-6ce34ec4c700"  // The MIDI Service
 #define CHARACTERISTIC_UUID "7772e5db-3868-4112-a1a9-f2669d106bf3"  // The MIDI Characteristic
 
@@ -52,7 +51,6 @@ const int cc_code_btn1 = 0x20;
 const int cc_code_btn2 = 0x21;     
 const int cc_code_btn3 = 0x22;     
 
-
 BLECharacteristic *pCharacteristic;
 int cc_code_prev = 0;
 
@@ -64,7 +62,6 @@ uint8_t midiPacket[] = {
    0x3c,  // data - key note: 0x3c == 60 == middle c
    0x00   // velocity
 };
-
 
 /**
  * In this first version I use a DigiTech FS3X footswitch connected to a Wemos D1 R32 ESP32 board
@@ -80,7 +77,7 @@ uint8_t midiPacket[] = {
  * 
  */
 void setup() {
-  Serial.begin(115200);
+Serial.begin(115200);
   Serial.println("Starting BLE work!");
 
   /** Init the DIGITAL INPUT **/
@@ -108,8 +105,6 @@ void setup() {
   BLEDevice::startAdvertising();
   Serial.println("Characteristic defined! Now you can read it in your phone!");
 }
-
-
 
 void loop() {
 
