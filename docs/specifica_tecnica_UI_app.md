@@ -47,14 +47,14 @@ Ovviamente se una delle due modalità non deve essere usata sarà sufficiente sp
 
 Il campo Event può essere selezionato tra uno di queste opzioni, e sulla base dell'evento si potranno definire ulteriori parametri:
 
-- Send single 
+- Single 
 - Repeat 
-- Increment value
+- Increment 
 - On_Off
 
 Di seguito la descrizione di ogni evento:
 
-### Send single
+### Single
 Ad ogni tap/hold configurato in questo modo verrà inviato un comando MIDI.
 I parametri aggiuntivi di questo evento saranno quindi:
 
@@ -75,7 +75,7 @@ I parametri aggiuntivi di questo evento saranno quindi:
 - MIDI Value:  il valore del CC o del PC
 
 
-### Send single
+### Increment
 Ad ogni tap/hold configurato in questo modo verrà inviato un comando MIDI il cui valore associato verrà incrementato/decrementato ad ogni invio.  Il fw dovrà quindi tenere traccia dell'ultimo valore inviato
 
 I parametri aggiuntivi di questo evento saranno quindi:
