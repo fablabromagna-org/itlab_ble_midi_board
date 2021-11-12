@@ -26,7 +26,7 @@ public:
         __UINT8_TYPE__ length;
     } MidiMessage;
     
-    bool buildMidiCommand(MidiHelper::MidiMessageType type, __UINT8_TYPE__ midi_channel, __UINT8_TYPE__ midi_cmd_nr, __UINT8_TYPE__ midi_cmd_value, MidiMessage* midi_message) {
+   static bool buildMidiCommand(MidiHelper::MidiMessageType type, __UINT8_TYPE__ midi_channel, __UINT8_TYPE__ midi_cmd_nr, __UINT8_TYPE__ midi_cmd_value, MidiMessage* midi_message) {
          //  TODO: inserire il controllo sul range dei comandi 
 
         // TODO: gestire meglio check array

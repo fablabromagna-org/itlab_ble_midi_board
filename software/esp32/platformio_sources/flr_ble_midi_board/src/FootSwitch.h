@@ -1,11 +1,27 @@
 #ifndef FOOTSWITCH_H
 #define FOOTSWITCH_H
 
+#include <MidiHelper.h>
+
 #define DEBOUNCE_TIME 2  //ms
 
-#define HOLD_TIME  1000  //ms
+#define HOLD_TIME  500  //ms
 class FootSwitch {
+
+    typedef struct TapConfig {
+        uint8_t midiChannel;
+        MidiHelper::MidiMessageType midiMessageType;
+        uint8_t midiMessageNumber;
+        uint8_t midiMessageValue;
+
+    } TapConfig;
+
 public:
+    typedef  enum FootSwitchEvent {
+        FS_TAP,
+        FS_HOLD
+    } FootSwitchEvent;
+
 
     FootSwitch() {
         bool pressed = false;
@@ -67,7 +83,7 @@ private:
     unsigned long t_released ;
     unsigned long t_last_repeat;
 
-    
+    TapConfig tapConfiguration;
 
 
 

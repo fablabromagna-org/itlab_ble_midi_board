@@ -1,22 +1,19 @@
 {
     "config_name": "test1_NUX",
     "firmwave_version": 0.1,
-    "midi_channel": 0,
+    
     "footswitch_nr": 4,
     "ble_mode": "server",
     "fs_config": [
         {
             "fs_id": 1,
             "tap": {
-                "event":"increment",
-                "variable": 1,
-                "min": 0,
-                "max":6,
-                "step":1,
-                "cycle":true,
+                "event":"single",
+                "midi_channel": 1,
                 "midi_type": "cc",
                 "midi_nr": 49,
-                "midi_descr":"preset_channel"
+                "midi_value": 3,
+                "midi_descr":"preset_channel 3"
             },
             "hold": {
                 "event":"increment",
@@ -26,6 +23,7 @@
                 "step":1,
                 "interval":1000,
                 "cycle":true,
+                "midi_channel": 1,
                 "midi_type": "cc",
                 "midi_nr": 49,
                 "midi_descr":"preset_channel"
@@ -40,6 +38,7 @@
                 "max":6,
                 "step":-1,
                 "cycle":true,
+                "midi_channel": 1,
                 "midi_type": "cc",
                 "midi_nr": 49,
                 "midi_descr":"preset_channel"
@@ -52,6 +51,7 @@
                 "step":-1,
                 "interval":1000,
                 "cycle":true,
+                "midi_channel": 1,
                 "midi_type": "cc",
                 "midi_nr": 49,
                 "midi_descr":"preset_channel"
@@ -62,6 +62,7 @@
             "tap": {
                 "event":"on_off",
                 "group": 1,
+                "midi_channel": 1,
                 "midi_type": "cc",
                 "midi_nr": 84,
                 "midi_value_on": 1,
@@ -79,6 +80,7 @@
             "tap": {
                 "event":"on_off",
                 "group": 2,
+                "midi_channel": 1,
                 "midi_type": "cc",
                 "midi_nr": 28,
                 "midi_value_on": 1,
@@ -90,6 +92,7 @@
                 "event":"on_off",
                 "group": 3,
                 "led":false,
+                "midi_channel": 1,
                 "midi_type": "cc",
                 "midi_nr": 122,
                 "midi_value_on": 1,

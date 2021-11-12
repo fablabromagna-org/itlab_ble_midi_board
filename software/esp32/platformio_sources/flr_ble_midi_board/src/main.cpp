@@ -42,12 +42,19 @@
 #include <BLEServer.h>
 #include <MidiHelper.h>
 #include <FootSwitch.h>
+#include <FootSwitchController.h>
+
+#include <test_config.h>
+
 #define SERVICE_UUID        "03b80e5a-ede8-4b33-a751-6ce34ec4c700"  // The MIDI Service
 #define CHARACTERISTIC_UUID "7772e5db-3868-4112-a1a9-f2669d106bf3"  // The MIDI Characteristic
+
+
 // #define ARRAY_LENGTH(x) (sizeof(x)/sizeof(x[0]))
 
 BLECharacteristic *pCharacteristic;
 FootSwitch  *footswitchArray;
+FootSwitchController  footSwitchController;
 
 
 // TODO: this vars should be moved to config
@@ -72,6 +79,14 @@ struct hardware_interrupt
 
 
 // int cc_code_prev = 0;
+
+
+void send_midi_command(MidiHelper::MidiMessage midi_message) {
+    pCharacteristic->setValue(midi_message.content, midi_message.length); 
+    pCharacteristic->notify();
+    vTaskDelay(100/portTICK_PERIOD_MS);
+
+}
 
 void send_midi_command(MidiHelper::MidiMessageType msg_type, u_char midi_channel, u_char midi_cmd_nr, u_char midi_cmd_value) {
 
@@ -99,9 +114,9 @@ void process_tap_event(uint8_t fs_nr) {
   Serial.println ("Processing TAP Event   " + fs_nr); 
 
   // TODO: gestire invio MIDI sulla base della configurazione
+  //send_midi_command(MidiHelper::MIDI_CC, 1 , 12, 1);
 
-  send_midi_command(MidiHelper::MIDI_CC, 1 , 12, 1);
-
+  send_midi_command(footSwitchController.processEvent(fs_nr, FootSwitch::FS_TAP));
 }
 
 void process_hold_event(uint8_t fs_nr) {
@@ -162,6 +177,8 @@ void setup() {
   Serial.begin(115200);
 
   Serial.println("FablabRomagna BLE MIDI Controller");
+
+  footSwitchController.processJsonConfiguration(my_json_config);
 
   footswitchArray = new FootSwitch[fs_number]; 
 
