@@ -12,6 +12,7 @@
 class FootSwitchController {
 
     typedef enum ConfigBLEMode {
+        BLE_NONE,
         BLE_SERVER,
         BLE_CLIENT
     } ConfigBLEMode;
@@ -59,9 +60,8 @@ public:
 
     typedef struct ControllerConfiguration {
         char ble_name[32] = "FLR BLE MIDI Controller";
-        uint16_t vesion;
+        uint16_t version;
         uint8_t  footswitch_nr = 0;
-
         uint8_t ble_mode;
         FootSwitchConfiguration footSwitchConfiguration[FS_NR_MAX];
 
