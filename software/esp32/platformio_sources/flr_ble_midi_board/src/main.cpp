@@ -44,7 +44,10 @@
 #include <FootSwitch.h>
 #define SERVICE_UUID        "03b80e5a-ede8-4b33-a751-6ce34ec4c700"  // The MIDI Service
 #define CHARACTERISTIC_UUID "7772e5db-3868-4112-a1a9-f2669d106bf3"  // The MIDI Characteristic
+// #define ARRAY_LENGTH(x) (sizeof(x)/sizeof(x[0]))
 
+BLECharacteristic *pCharacteristic;
+FootSwitch  *footswitchArray;
 
 
 // TODO: this vars should be moved to config
@@ -54,21 +57,10 @@ const int fs_number = 4;
 // TODO: read from config or assign fixed for max footswitch managed (8?)
 const int fs_input_pin[fs_number] = {14,27,12,13};
 
-// const int fs1_input_pin = 36;     
-// const int fs2_input_pin = 39;
-// const int fs3_input_pin = 39;
-// const int fs4_input_pin = 39;
-
 const int fs1_led_pin = 36;     
 const int fs2_led_pin = 39;
 const int fs3_led_pin = 39;
 const int fs4_led_pin = 39;
-
-
-     
-
-
-#define ARRAY_LENGTH(x) (sizeof(x)/sizeof(x[0]))
 
 typedef void (*isr_callback)();
 
@@ -79,23 +71,7 @@ struct hardware_interrupt
 };
 
 
-struct footswitch
-{
-  bool pressed = false;
-  bool hold = false;
-  bool group_active = false;
-  unsigned long t_pressed = 0;
-  unsigned long t_released = 0;
-  unsigned long t_last_repeat = 0;
-};
-
-
-
-// footswitch  footswitchArray[fs_number]; 
-FootSwitch  footswitchArray[fs_number]; 
-
-BLECharacteristic *pCharacteristic;
-int cc_code_prev = 0;
+// int cc_code_prev = 0;
 
 void send_midi_command(MidiHelper::MidiMessageType msg_type, u_char midi_channel, u_char midi_cmd_nr, u_char midi_cmd_value) {
 
@@ -138,15 +114,9 @@ void process_hold_event(uint8_t fs_nr) {
 
 
 void process_interrupt(uint8_t fs_nr, bool new_state_pressed) {
-  //footswitch *my_footswitch = &footswitchArray[fs_nr-1];
-
+  
   FootSwitch *my_footswitch = &footswitchArray[fs_nr-1];
-  // Serial.print("Processing Interrupt "); 
-  // Serial.print(fs_nr);
-  // Serial.println(new_state_pressed?"P":"R"); 
-
- 
-
+  
   if ((new_state_pressed)  && (!my_footswitch->isPressed())) {
     if  (my_footswitch->press(millis())) {
       Serial.println("PRESSED "); 
@@ -193,6 +163,8 @@ void setup() {
 
   Serial.println("FablabRomagna BLE MIDI Controller");
 
+  footswitchArray = new FootSwitch[fs_number]; 
+
   /** Init the DIGITAL INPUT **/
   for (int idx = 0; idx<fs_number; idx++) {
     pinMode(fs_input_pin[idx], INPUT);
@@ -229,8 +201,6 @@ void setup() {
 
 
 void loop() {
-
-
   for (uint8_t idx = 0; idx<fs_number; idx++) {
 
     if (footswitchArray[idx].checkHold(millis())) {
