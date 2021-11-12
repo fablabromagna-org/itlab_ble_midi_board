@@ -2,6 +2,18 @@
 
 FootSwitchController::FootSwitchController() {
     jsonConfiguration = new DynamicJsonDocument(2048);
+
+
+}
+
+bool FootSwitchController::processBinaryConfiguration(char* bin_config, size_t bin_config_len) {
+
+    //TODO: aggiungere check su dimensione e byte di controllo
+
+    if (bin_config_len <= sizeof(controllerConfiguration)) {
+        memcpy(&controllerConfiguration, bin_config, bin_config_len);
+    }
+
 }
 
 bool FootSwitchController::processJsonConfiguration(char* json_config_str) {
@@ -18,6 +30,51 @@ bool FootSwitchController::processJsonConfiguration(char* json_config_str) {
 
 
 MidiHelper::MidiMessage FootSwitchController::processEvent(uint8_t fs_id, FootSwitch::FootSwitchEvent event){
+    static MidiHelper::MidiMessage ret_message;
+    FootSwitchConfigurationDetail config_detail;
+
+    //TODO: check anche dell'indice massimo!
+    if (fs_id > 0) {
+        if (event == FootSwitch::FootSwitchEvent::FS_TAP) {
+            config_detail = this->controllerConfiguration.footSwitchConfiguration[fs_id-1].config_tap;
+        }
+        else if (event == FootSwitch::FootSwitchEvent::FS_HOLD) {
+            config_detail = this->controllerConfiguration.footSwitchConfiguration[fs_id-1].config_hold;
+        }
+
+        uint8_t midi_val = 0x00;
+        MidiHelper::MidiMessageType midi_type;
+        if (config_detail.midi_type == ConfigMidiType::MIDI_TYPE_CC) {
+            midi_type = MidiHelper::MidiMessageType::MIDI_CC;
+        }
+        else if (config_detail.midi_type == ConfigMidiType::MIDI_TYPE_PC) {
+            midi_type = MidiHelper::MidiMessageType::MIDI_PC;
+        }
+        //TODO: gestire anche altre tipologie?
+
+        switch (config_detail.event) {
+        case FootSwitchController::ConfigEvent::EVENT_SINGLE:
+            midi_val = config_detail.midi_value_on;
+            break;
+        
+        default:
+            midi_val = 99;
+            break;
+        }
+
+        if (!MidiHelper::buildMidiCommand(midi_type, config_detail.midi_ch, config_detail.midi_nr, midi_val , &ret_message) ) {
+            ret_message.length = 0;
+        }
+
+
+    }
+    return ret_message;
+
+}
+
+
+
+MidiHelper::MidiMessage FootSwitchController::processEvent1(uint8_t fs_id, FootSwitch::FootSwitchEvent event){
     
     static MidiHelper::MidiMessage ret_message;
 
@@ -43,9 +100,9 @@ MidiHelper::MidiMessage FootSwitchController::processEvent(uint8_t fs_id, FootSw
         if (!MidiHelper::buildMidiCommand(midi_type, midi_ch, midi_nr, midi_val , &ret_message) ) {
             ret_message.length = 0;
         }
-
-        return ret_message;
+       
     }
+    return ret_message;
 }
 
 bool FootSwitchController::isValid() {return valid_config;}

@@ -49,13 +49,16 @@
 #define SERVICE_MIDI_UUID        "03b80e5a-ede8-4b33-a751-6ce34ec4c700"  // The MIDI Service
 #define CHARACTERISTIC_MIDI_UUID "7772e5db-3868-4112-a1a9-f2669d106bf3"  // The MIDI Characteristic
 
+#define SERVICE_CONFIGURATION_UUID        "98611bc6-43c5-11ec-81d3-0242ac130003"
+#define CHARACTERISTIC_CONFIGURATION_UUID "ae0f58f2-43c5-11ec-81d3-0242ac130003"
+
 #define SERVICE_BATTERY_UUID  BLEUUID((uint16_t)0x180F)
 #define CHARACTERISTIC_BATTERY_UUID BLEUUID((uint16_t)0x2A19)
 
 
 // #define ARRAY_LENGTH(x) (sizeof(x)/sizeof(x[0]))
 
-BLECharacteristic *pCharacteristicMidi, *pCharacteristicBattery;
+BLECharacteristic *pCharacteristicMidi, *pCharacteristicConfiguration, *pCharacteristicBattery;
 FootSwitch  *footswitchArray;
 FootSwitchController  footSwitchController;
 
@@ -85,9 +88,14 @@ struct hardware_interrupt
 
 
 void send_midi_command(MidiHelper::MidiMessage midi_message) {
-    pCharacteristicMidi->setValue(midi_message.content, midi_message.length); 
-    pCharacteristicMidi->notify();
-    vTaskDelay(100/portTICK_PERIOD_MS);
+    if (midi_message.length > 0) {
+      pCharacteristicMidi->setValue(midi_message.content, midi_message.length); 
+      pCharacteristicMidi->notify();
+      vTaskDelay(100/portTICK_PERIOD_MS);
+    }
+    else {
+      Serial.println ("No MIDI message to send  ");     
+    }
 
 }
 
@@ -120,6 +128,9 @@ void process_tap_event(uint8_t fs_nr) {
   //send_midi_command(MidiHelper::MIDI_CC, 1 , 12, 1);
 
   send_midi_command(footSwitchController.processEvent(fs_nr, FootSwitch::FS_TAP));
+
+  
+  send_midi_command(footSwitchController.processEvent1(fs_nr, FootSwitch::FS_TAP));
 }
 
 void process_hold_event(uint8_t fs_nr) {
@@ -171,8 +182,21 @@ hardware_interrupt isrArray[] =
 };
 
 
+class ConfigCallbacks: public BLECharacteristicCallbacks {
+    void onWrite(BLECharacteristic *pCharacteristic) {
+      std::string value = pCharacteristic->getValue();
 
+      if (value.length() > 0) {
+        Serial.println("*********");
+        Serial.print("New value: ");
+        for (int i = 0; i < value.length(); i++)
+          Serial.print(value[i]);
 
+        Serial.println();
+        Serial.println("*********");
+      }
+    }
+};
 
 
 void setup() {
@@ -209,6 +233,18 @@ void setup() {
                                          BLECharacteristic::PROPERTY_WRITE_NR
                                        );
 
+  BLEService *pServiceConfig = pServer->createService(SERVICE_CONFIGURATION_UUID);
+  pCharacteristicConfiguration = pServiceConfig->createCharacteristic(
+                                         CHARACTERISTIC_CONFIGURATION_UUID,
+                                         BLECharacteristic::PROPERTY_READ |
+                                         BLECharacteristic::PROPERTY_NOTIFY |
+                                         BLECharacteristic::PROPERTY_WRITE
+                                       );
+  
+  pCharacteristicConfiguration->setCallbacks(new ConfigCallbacks());
+  
+
+
   BLEService *pServiceBattery = pServer->createService(SERVICE_BATTERY_UUID);
 
   pCharacteristicBattery = pServiceBattery->createCharacteristic(
@@ -220,6 +256,7 @@ void setup() {
 
 
   pServiceMidi->start();
+  pServiceConfig->start();
   pServiceBattery->start();
 
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
