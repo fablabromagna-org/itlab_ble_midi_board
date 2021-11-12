@@ -102,20 +102,20 @@ void send_midi_command(MidiHelper::MidiMessageType msg_type, u_char midi_channel
   //  TODO: inserire il controllo sul range dei comandi 
 
   MidiHelper midiHelper;
-  __UINT8_TYPE__ msg_tx[10];
+  MidiHelper::MidiMessage midi_message;
 
-  if ( midiHelper.buildMidiCommand(msg_type, midi_channel,midi_cmd_nr, midi_cmd_value , msg_tx) ) {
+  if ( midiHelper.buildMidiCommand(msg_type, midi_channel,midi_cmd_nr, midi_cmd_value , &midi_message) ) {
 
-    Serial.println("Sending MIDI message");
-    for (int i=0 ; i< 10; i++) {
-      Serial.print(msg_tx[i]);
-    }
+    // Serial.println("Sending MIDI message ");
+    // Serial.println(midi_message.length);
+    // for (int i=0 ; i< midi_message.length; i++) {
+    //   Serial.println(midi_message.content[i]);
+    // }
     
-    pCharacteristic->setValue(msg_tx, 5); // packet, length in bytes
+    pCharacteristic->setValue(midi_message.content, midi_message.length); 
     pCharacteristic->notify();
     vTaskDelay(100/portTICK_PERIOD_MS);
   }
-
  }
 
 
