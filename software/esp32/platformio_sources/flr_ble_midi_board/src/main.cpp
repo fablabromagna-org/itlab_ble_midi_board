@@ -46,13 +46,16 @@
 
 #include <test_config.h>
 
-#define SERVICE_UUID        "03b80e5a-ede8-4b33-a751-6ce34ec4c700"  // The MIDI Service
-#define CHARACTERISTIC_UUID "7772e5db-3868-4112-a1a9-f2669d106bf3"  // The MIDI Characteristic
+#define SERVICE_MIDI_UUID        "03b80e5a-ede8-4b33-a751-6ce34ec4c700"  // The MIDI Service
+#define CHARACTERISTIC_MIDI_UUID "7772e5db-3868-4112-a1a9-f2669d106bf3"  // The MIDI Characteristic
+
+#define SERVICE_BATTERY_UUID  BLEUUID((uint16_t)0x180F)
+#define CHARACTERISTIC_BATTERY_UUID BLEUUID((uint16_t)0x2A19)
 
 
 // #define ARRAY_LENGTH(x) (sizeof(x)/sizeof(x[0]))
 
-BLECharacteristic *pCharacteristic;
+BLECharacteristic *pCharacteristicMidi, *pCharacteristicBattery;
 FootSwitch  *footswitchArray;
 FootSwitchController  footSwitchController;
 
@@ -82,8 +85,8 @@ struct hardware_interrupt
 
 
 void send_midi_command(MidiHelper::MidiMessage midi_message) {
-    pCharacteristic->setValue(midi_message.content, midi_message.length); 
-    pCharacteristic->notify();
+    pCharacteristicMidi->setValue(midi_message.content, midi_message.length); 
+    pCharacteristicMidi->notify();
     vTaskDelay(100/portTICK_PERIOD_MS);
 
 }
@@ -103,8 +106,8 @@ void send_midi_command(MidiHelper::MidiMessageType msg_type, u_char midi_channel
     //   Serial.println(midi_message.content[i]);
     // }
     
-    pCharacteristic->setValue(midi_message.content, midi_message.length); 
-    pCharacteristic->notify();
+    pCharacteristicMidi->setValue(midi_message.content, midi_message.length); 
+    pCharacteristicMidi->notify();
     vTaskDelay(100/portTICK_PERIOD_MS);
   }
  }
@@ -198,17 +201,29 @@ void setup() {
   Serial.println("Starting BLE Server");
   BLEDevice::init("FLR_MIDI_Board");
   BLEServer *pServer = BLEDevice::createServer();
-  BLEService *pService = pServer->createService(SERVICE_UUID);
-  pCharacteristic = pService->createCharacteristic(
-                                         CHARACTERISTIC_UUID,
+  BLEService *pServiceMidi = pServer->createService(SERVICE_MIDI_UUID);
+  pCharacteristicMidi = pServiceMidi->createCharacteristic(
+                                         CHARACTERISTIC_MIDI_UUID,
                                          BLECharacteristic::PROPERTY_READ |
                                          BLECharacteristic::PROPERTY_NOTIFY |
                                          BLECharacteristic::PROPERTY_WRITE_NR
                                        );
 
-  pService->start();
+  BLEService *pServiceBattery = pServer->createService(SERVICE_BATTERY_UUID);
+
+  pCharacteristicBattery = pServiceBattery->createCharacteristic(
+                                         CHARACTERISTIC_BATTERY_UUID,
+                                         BLECharacteristic::PROPERTY_READ |
+                                         BLECharacteristic::PROPERTY_NOTIFY |
+                                         BLECharacteristic::PROPERTY_WRITE_NR
+                                       );
+
+
+  pServiceMidi->start();
+  pServiceBattery->start();
+
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->addServiceUUID(SERVICE_MIDI_UUID);
   pAdvertising->setScanResponse(true);
   pAdvertising->setMinPreferred(0x06);  // functions that help with iPhone connections issue
   pAdvertising->setMinPreferred(0x12);
