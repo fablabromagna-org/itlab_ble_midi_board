@@ -37,13 +37,19 @@
 */
 
 #include <Arduino.h>
-#include <BLEDevice.h>
-#include <BLEUtils.h>
-#include <BLEServer.h>
+
+// #include <BLEDevice.h>
+// #include <BLEUtils.h>
+// #include <BLEServer.h>
+
+#include <NimBLEDevice.h>
+#include <NimBLEUtils.h>
+#include <NimBLEServer.h>
 
 #include <MidiHelper.h>
 #include <FootSwitch.h>
 #include <FootSwitchController.h>
+
 
 #include <test_config.h>
 
@@ -242,17 +248,17 @@ void setup() {
   BLEService *pServiceMidi = pServer->createService(SERVICE_MIDI_UUID);
   pCharacteristicMidi = pServiceMidi->createCharacteristic(
                                          CHARACTERISTIC_MIDI_UUID,
-                                         BLECharacteristic::PROPERTY_READ |
-                                         BLECharacteristic::PROPERTY_NOTIFY |
-                                         BLECharacteristic::PROPERTY_WRITE_NR
+                                         NIMBLE_PROPERTY::READ |
+                                         NIMBLE_PROPERTY::NOTIFY |
+                                         NIMBLE_PROPERTY::WRITE_NR
                                        );
 
   BLEService *pServiceConfig = pServer->createService(SERVICE_CONFIGURATION_UUID);
   pCharacteristicConfiguration = pServiceConfig->createCharacteristic(
                                          CHARACTERISTIC_CONFIGURATION_UUID,
-                                         BLECharacteristic::PROPERTY_READ |
-                                         BLECharacteristic::PROPERTY_NOTIFY |
-                                         BLECharacteristic::PROPERTY_WRITE
+                                         NIMBLE_PROPERTY::READ |
+                                         NIMBLE_PROPERTY::NOTIFY |
+                                         NIMBLE_PROPERTY::WRITE
                                        );
   
   pCharacteristicConfiguration->setCallbacks(new ConfigCallbacks());
@@ -263,9 +269,9 @@ void setup() {
 
   pCharacteristicBattery = pServiceBattery->createCharacteristic(
                                          CHARACTERISTIC_BATTERY_UUID,
-                                         BLECharacteristic::PROPERTY_READ |
-                                         BLECharacteristic::PROPERTY_NOTIFY |
-                                         BLECharacteristic::PROPERTY_WRITE_NR
+                                         NIMBLE_PROPERTY::READ |
+                                         NIMBLE_PROPERTY::NOTIFY |
+                                         NIMBLE_PROPERTY::WRITE_NR
                                        );
 
 
