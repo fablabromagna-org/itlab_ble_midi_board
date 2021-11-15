@@ -40,6 +40,7 @@
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEServer.h>
+
 #include <MidiHelper.h>
 #include <FootSwitch.h>
 #include <FootSwitchController.h>
@@ -196,6 +197,18 @@ class ConfigCallbacks: public BLECharacteristicCallbacks {
         Serial.println("*********");
       }
     }
+
+  void onRead(BLECharacteristic *pCharacteristic) {
+    uint8_t *char_tmp_value = new uint8_t[3];
+    
+    char_tmp_value[0] = 0x0a;
+    char_tmp_value[1] = 0x0b;
+    char_tmp_value[2] = 0x0c;
+
+    
+    pCharacteristic->setValue(char_tmp_value, 3);
+  }
+
 };
 
 
@@ -224,6 +237,7 @@ void setup() {
   /** Init the BLE Service **/ 
   Serial.println("Starting BLE Server");
   BLEDevice::init("FLR_MIDI_Board");
+
   BLEServer *pServer = BLEDevice::createServer();
   BLEService *pServiceMidi = pServer->createService(SERVICE_MIDI_UUID);
   pCharacteristicMidi = pServiceMidi->createCharacteristic(
