@@ -35,32 +35,35 @@ class FootSwitchController {
 
 public:
     typedef struct FootSwitchConfigurationDetail {
-        uint8_t start = 0x80;
-        uint8_t event = 0x00;
+        uint8_t start;
+        uint8_t event;
         uint8_t midi_ch;
         uint8_t midi_type;
         uint8_t midi_nr;
         uint8_t midi_value_on;
         uint8_t midi_value_off;
-        uint16_t repeat_interval;
+        uint8_t repeat_interval;
         uint8_t group_idx;
         uint8_t intval_idx;
         uint8_t intval_min;
         uint8_t intval_max;
-        int8_t  intval_step;
+        uint8_t positive_step;
+        uint8_t intval_step;
         uint8_t cycle;
         uint8_t end = 0x88;
     } FootSwitchConfigurationDetail;
 
     typedef struct FootSwitchConfiguration {
-        uint8_t footswitch_idx;
+        // uint8_t footswitch_idx;
+        // uint8_t dummy;
         FootSwitchConfigurationDetail  config_tap;
         FootSwitchConfigurationDetail  config_hold;
     } FootSwitchConfiguration;
 
     typedef struct ControllerConfiguration {
         char ble_name[32] = "FLR BLE MIDI Controller";
-        uint16_t version;
+        uint8_t version_major;
+        uint8_t version_minor;
         uint8_t  footswitch_nr = 0;
         uint8_t ble_mode;
         FootSwitchConfiguration footSwitchConfiguration[FS_NR_MAX];
@@ -70,13 +73,20 @@ public:
 
 
     FootSwitchController(void);
-    bool processBinaryConfiguration(char* bin_config, size_t bin_config_size);
+    bool processBinaryConfiguration(uint8_t* bin_config, size_t bin_config_size);
 
     bool processJsonConfiguration(char* json_config_str);
     MidiHelper::MidiMessage processEvent(uint8_t fs_id, FootSwitch::FootSwitchEvent event);
     MidiHelper::MidiMessage processEvent1(uint8_t fs_id, FootSwitch::FootSwitchEvent event);
     bool isValid();
 
+    char* debugThis() {
+        FootSwitchConfigurationDetail config_detail;
+        
+        config_detail = this->controllerConfiguration.footSwitchConfiguration[0].config_tap;
+
+        return (char*)&config_detail;
+    }
 private:
     DynamicJsonDocument *jsonConfiguration;
     ControllerConfiguration controllerConfiguration;

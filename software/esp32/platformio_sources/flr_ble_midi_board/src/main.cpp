@@ -130,6 +130,7 @@ void process_tap_event(uint8_t fs_nr) {
 
   send_midi_command(footSwitchController.processEvent(fs_nr, FootSwitch::FS_TAP));
 
+  Serial.print(footSwitchController.debugThis());
   
   send_midi_command(footSwitchController.processEvent1(fs_nr, FootSwitch::FS_TAP));
 }
@@ -146,7 +147,7 @@ void process_hold_event(uint8_t fs_nr) {
 void process_interrupt(uint8_t fs_nr, bool new_state_pressed) {
   
   FootSwitch *my_footswitch = &footswitchArray[fs_nr-1];
-  
+ 
   if ((new_state_pressed)  && (!my_footswitch->isPressed())) {
     if  (my_footswitch->press(millis())) {
       Serial.println("PRESSED "); 
@@ -219,6 +220,9 @@ void setup() {
   Serial.println("FablabRomagna BLE MIDI Controller");
 
   footSwitchController.processJsonConfiguration(my_json_config);
+
+  footSwitchController.processBinaryConfiguration(my_bin_config, sizeof(my_bin_config));
+
 
   footswitchArray = new FootSwitch[fs_number]; 
 

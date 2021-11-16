@@ -1,4 +1,5 @@
 #include <FootSwitchController.h>
+#include <Arduino.h>
 
 FootSwitchController::FootSwitchController() {
     jsonConfiguration = new DynamicJsonDocument(2048);
@@ -6,14 +7,51 @@ FootSwitchController::FootSwitchController() {
 
 }
 
-bool FootSwitchController::processBinaryConfiguration(char* bin_config, size_t bin_config_len) {
+bool FootSwitchController::processBinaryConfiguration(uint8_t* bin_config, size_t bin_config_len) {
 
     //TODO: aggiungere check su dimensione e byte di controllo
 
     if (bin_config_len <= sizeof(controllerConfiguration)) {
-        memcpy(&controllerConfiguration, bin_config, bin_config_len);
-    }
 
+        memcpy(&controllerConfiguration, bin_config, bin_config_len);
+
+        //controllerConfiguration = (ControllerConfiguration)bin_config;
+
+        // memcpy(&controllerConfiguration, bin_config, 36);
+        // memcpy(&controllerConfiguration.footSwitchConfiguration[0], bin_config+36, 1);
+        // memcpy(&controllerConfiguration.footSwitchConfiguration[0].config_tap, bin_config+37, 20);
+        
+        // Serial.println("BIN CONFIG");
+
+
+        // Serial.println(sizeof(controllerConfiguration));
+        // Serial.println(sizeof(controllerConfiguration.footSwitchConfiguration));
+
+        // Serial.println(sizeof(controllerConfiguration.footSwitchConfiguration[0].config_tap));
+        // Serial.println(sizeof(FootSwitchConfigurationDetail));
+        // Serial.println("--------");
+
+
+        // Serial.println(bin_config_len);
+        // Serial.println(controllerConfiguration.ble_mode);
+        // // Serial.println(controllerConfiguration.footSwitchConfiguration[0].footswitch_idx);
+        // Serial.println(controllerConfiguration.footSwitchConfiguration[0].config_tap.start);
+        // Serial.println(controllerConfiguration.footSwitchConfiguration[0].config_tap.event);
+        // Serial.println(controllerConfiguration.footSwitchConfiguration[0].config_tap.midi_ch);
+        // Serial.println(controllerConfiguration.footSwitchConfiguration[0].config_tap.midi_type);
+        // Serial.println(controllerConfiguration.footSwitchConfiguration[0].config_tap.midi_nr);
+        // Serial.println(controllerConfiguration.footSwitchConfiguration[0].config_tap.midi_value_on);
+
+        // Serial.println("------- 2 --------");
+
+        // Serial.println(controllerConfiguration.footSwitchConfiguration[1].config_tap.start);
+        // Serial.println(controllerConfiguration.footSwitchConfiguration[1].config_tap.event);
+        // Serial.println(controllerConfiguration.footSwitchConfiguration[1].config_tap.midi_ch);
+        // Serial.println(controllerConfiguration.footSwitchConfiguration[1].config_tap.midi_type);
+        // Serial.println(controllerConfiguration.footSwitchConfiguration[1].config_tap.midi_nr);
+        // Serial.println(controllerConfiguration.footSwitchConfiguration[1].config_tap.midi_value_on);
+        
+    }
 }
 
 bool FootSwitchController::processJsonConfiguration(char* json_config_str) {

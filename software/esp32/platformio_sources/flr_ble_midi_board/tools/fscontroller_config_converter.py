@@ -24,6 +24,7 @@ def process_config(mode, filename):
         for i in range(32 - len(str_name)):
             frame_out.append(0x00)
         
+        # TODO: da gestire
         # per ora fisso... poi vedremo
         # version
         frame_out.append(1)
@@ -34,7 +35,7 @@ def process_config(mode, filename):
         frame_out.append(1 if (data["ble_mode"] == "server") else 2 )
         for fsnr in range(data["footswitch_nr"]):
             fs_config = data["fs_config"][fsnr]
-            frame_out.append(fs_config["fs_id"])
+            # frame_out.append(fs_config["fs_id"])
 
             for detail in ("tap", "hold"):
                 # Control byte
@@ -60,11 +61,13 @@ def process_config(mode, filename):
                     frame_out.append(detail_config["midi_nr"])    # midi_nr
                     frame_out.append(detail_config["midi_value"])    # midi_value_on
                     frame_out.append(0x00)    # midi_value_off
-                    interval_bytes = detail_config["interval"].to_bytes(2, byteorder='big', signed=True)
                     
-                    frame_out.append(interval_bytes[0])    # repeat_interval
-                    frame_out.append(interval_bytes[1])    # repeat_interval
+                    # interval_bytes = detail_config["interval"].to_bytes(2, byteorder='big', signed=True)
+                    # frame_out.append(interval_bytes[0])    # repeat_interval
+                    # frame_out.append(interval_bytes[1])    # repeat_interval
 
+                    frame_out.append(detail_config["interval"]/10)
+                    
                     for i in range(6):
                         frame_out.append(0x00)
                     
@@ -75,19 +78,24 @@ def process_config(mode, filename):
                     frame_out.append(detail_config["midi_nr"])    # midi_nr
                     frame_out.append(0x00)    # midi_value_on
                     frame_out.append(0x00)    # midi_value_off
+
                     try :
-                        interval_bytes = detail_config["interval"].to_bytes(2, byteorder='big', signed=True)
+                        frame_out.append(detail_config["interval"]/10)
+                        # interval_bytes = detail_config["interval"].to_bytes(2, byteorder='big', signed=True)
                     except :
-                        interval_bytes = 0x00.to_bytes(2, byteorder='big', signed=True)
+                        frame_out.append(0x00)
+                        # interval_bytes = 0x00.to_bytes(2, byteorder='big', signed=True)
                 
-                    frame_out.append(interval_bytes[0])    # repeat_interval
-                    frame_out.append(interval_bytes[1])    # repeat_interval
+                    # frame_out.append(interval_bytes[0])    # repeat_interval
+                    # frame_out.append(interval_bytes[1])    # repeat_interval
 
                     frame_out.append(0x00)    # group_idx
                     frame_out.append(detail_config["variable"])    # intval_idx
                     frame_out.append(detail_config["min"])    # intval_min
                     frame_out.append(detail_config["max"])    # intval_max
-                    frame_out.append(detail_config["step"]+127)    # intval_step
+                    
+                    frame_out.append(1 if detail_config["step"] > 0 else 0)    # intval_step is positive?
+                    frame_out.append(abs(detail_config["step"]))    # intval_step
                     frame_out.append(0x01 if detail_config["cycle"] else 0x00)    # uint8_t cycle;
                     
 
