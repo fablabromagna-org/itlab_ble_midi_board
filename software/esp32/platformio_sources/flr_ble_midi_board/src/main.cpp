@@ -200,6 +200,7 @@ class ConfigCallbacks: public BLECharacteristicCallbacks {
     }
 
   void onRead(BLECharacteristic *pCharacteristic) {
+    Serial.println("**** READ CHAR *****");
     uint8_t *char_tmp_value = new uint8_t[3];
     
     char_tmp_value[0] = 0x0a;

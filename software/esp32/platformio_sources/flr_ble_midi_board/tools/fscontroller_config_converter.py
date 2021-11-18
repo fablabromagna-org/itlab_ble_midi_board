@@ -7,13 +7,24 @@ import os
 import json
 import argparse
 
-### Mode:
-# 1: read JSON file, output as C init variable
-# 2: read JSON file, output as binary file
-# 10: read binary file, output as json file
 
-def process_config(mode, filename):
-    if (mode == 1):
+
+class FSControllerConfigParser:
+    ### Mode:
+    # 1: read JSON file, output as C init variable
+    # 2: read JSON file, output as binary file
+    # 10: read binary file, output as json file
+
+    def process_config(self,mode, filename):
+        out_bin = self.json2bin(mode, filename)
+        
+        if (mode == 1):
+            return ','.join('0x{:02x}'.format(x) for x in out_bin)
+        elif (mode == 2):
+            return out_bin
+            
+
+    def json2bin(self, mode, filename):
         with open(filename) as f:
             data = json.load(f)
         
@@ -118,19 +129,14 @@ def process_config(mode, filename):
                 else:
                     for i in range(14):
                         frame_out.append(0x00)
-                   
+                
             
                 # Control byte
                 frame_out.append(0x88)
-            
-          
-            
-        
-        
         
         return frame_out
             
-    
+        
 
 
 if __name__ == "__main__":
@@ -141,6 +147,9 @@ if __name__ == "__main__":
     parser.add_argument('--json2c', action='store_true',
                     help='read JSON file, output as C init variable')
 
+    parser.add_argument('--json2bin', action='store_true',
+                    help='read JSON file, output as binary stream')
+
     parser.add_argument('file_name', type=str,
                     help='The input file name')
     
@@ -149,7 +158,11 @@ if __name__ == "__main__":
     process_mode = 0
     if (args.json2c): 
         process_mode = 1
-        out = process_config(process_mode, args.file_name)
         
-        print (','.join('0x{:02x}'.format(x) for x in out))
-        # print (out)
+    elif (args.json2bin): 
+        process_mode = 2
+
+    out = FSControllerConfigParser().process_config(process_mode, args.file_name)
+
+    # print (','.join('0x{:02x}'.format(x) for x in out))
+    print (out)
