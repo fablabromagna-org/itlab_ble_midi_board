@@ -208,7 +208,7 @@ class ConfigCallbacks: public BLECharacteristicCallbacks {
     char_tmp_value[2] = 0x0c;
 
     
-    pCharacteristic->setValue(char_tmp_value, 3);
+    pCharacteristic->setValue(footSwitchController.getBinConfiguration(), sizeof(FootSwitchController::ControllerConfiguration));
   }
 
 };
@@ -220,7 +220,7 @@ void setup() {
 
   Serial.println("FablabRomagna BLE MIDI Controller");
 
-  footSwitchController.processJsonConfiguration(my_json_config);
+  // footSwitchController.processJsonConfiguration(my_json_config);
 
   footSwitchController.processBinaryConfiguration(my_bin_config, sizeof(my_bin_config));
 

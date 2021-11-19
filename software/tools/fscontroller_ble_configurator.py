@@ -25,6 +25,10 @@ class FSControllerBle:
         async with BleakClient(device_address) as client:
             current_config = await client.read_gatt_char(self.CONFIG_UUID)        
             print (current_config)
+            
+            new_file = open(bin_filename, "wb")
+            new_file.write(current_config)
+            
         
 
 
@@ -47,7 +51,7 @@ if __name__ == "__main__":
                     help='Read the BLE controller name (max 30 chars)')
 
 
-    parser.add_argument('--device', type=str, default='30:AE:A4:21:2D:D2',
+    parser.add_argument('--device', type=str, default='30:ae:a4:21:2d:d2',
                     help='Use this device (MAC)')
 
     # parser.add_argument('--read_config', action='store_true',
@@ -71,20 +75,20 @@ if __name__ == "__main__":
         else:
             if (args.read_config_bin):
                 pass
-                # asyncio.run(FSControllerBle().read_config(args.device, args.read_config_bin))
+                asyncio.run(FSControllerBle().read_config(args.device, args.read_config_bin))
             else:
                 parser.print_help()
 
 
 
 
-address = "30:AE:A4:21:2D:D2"
-BLE_CONFIG_UUID = "ae0f58f2-43c5-11ec-81d3-0242ac130003"
+# address = "30:AE:A4:21:2D:D2"
+# BLE_CONFIG_UUID = "ae0f58f2-43c5-11ec-81d3-0242ac130003"
 
-async def main(address):
-    async with BleakClient(address) as client:
-        current_config = await client.read_gatt_char(BLE_CONFIG_UUID)
-        print("Current Configuration: ")
-        print(current_config)
+# async def main(address):
+#     async with BleakClient(address) as client:
+#         current_config = await client.read_gatt_char(BLE_CONFIG_UUID)
+#         print("Current Configuration: ")
+#         print(current_config)
 
-asyncio.run(main(address))
+# asyncio.run(main(address))

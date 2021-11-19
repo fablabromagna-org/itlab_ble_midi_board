@@ -66,6 +66,9 @@ bool FootSwitchController::processJsonConfiguration(char* json_config_str) {
     return this->valid_config;
 }
 
+uint8_t* FootSwitchController::getBinConfiguration() {
+    return (uint8_t*) (&controllerConfiguration);
+}
 
 MidiHelper::MidiMessage FootSwitchController::processEvent(uint8_t fs_id, FootSwitch::FootSwitchEvent event){
     static MidiHelper::MidiMessage ret_message;

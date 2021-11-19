@@ -74,8 +74,9 @@ public:
 
     FootSwitchController(void);
     bool processBinaryConfiguration(uint8_t* bin_config, size_t bin_config_size);
-
     bool processJsonConfiguration(char* json_config_str);
+
+    uint8_t* getBinConfiguration();
     MidiHelper::MidiMessage processEvent(uint8_t fs_id, FootSwitch::FootSwitchEvent event);
     MidiHelper::MidiMessage processEvent1(uint8_t fs_id, FootSwitch::FootSwitchEvent event);
     bool isValid();
