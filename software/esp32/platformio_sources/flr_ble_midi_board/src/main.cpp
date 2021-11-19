@@ -59,6 +59,7 @@
 
 // #define ARRAY_LENGTH(x) (sizeof(x)/sizeof(x[0]))
 
+BLEServer *pServer = NULL;
 BLECharacteristic *pCharacteristicMidi, *pCharacteristicConfiguration, *pCharacteristicBattery;
 FootSwitch  *footswitchArray;
 FootSwitchController  footSwitchController;
@@ -75,6 +76,9 @@ const int fs1_led_pin = 36;
 const int fs2_led_pin = 39;
 const int fs3_led_pin = 39;
 const int fs4_led_pin = 39;
+
+bool bleDeviceConnected = false;
+bool oldBleDeviceConnected = false;
 
 typedef void (*isr_callback)();
 
@@ -186,28 +190,36 @@ hardware_interrupt isrArray[] =
 
 class ConfigCallbacks: public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic *pCharacteristic) {
-    std::string value = pCharacteristic->getValue();
+    Serial.println("**** WRITE CONFIG *****");
 
-    if (value.length() > 0) {
-      Serial.println("*********");
-      Serial.print("New value: ");
-      for (int i = 0; i < value.length(); i++)
-        Serial.print(value[i]);
+    // std::string value = pCharacteristic->getValue();
 
-      Serial.println();
+    uint8_t config_bin[512];
+    uint8_t *data_in;
+    data_in = pCharacteristic->getData();
+    Serial.println(*data_in, HEX);
+
+    std::string rxValue = pCharacteristic->getValue();
+
+    if (rxValue.length() > 0) {
       Serial.println("*********");
+      Serial.print("Received Value: ");
+      for (int i = 0; i < rxValue.length(); i++)
+        Serial.print(rxValue[i]);
+
+      //TODO: important!!! insert some check of packet (integrity and well formed packet)
+      footSwitchController.processBinaryConfiguration((uint8_t*)rxValue.c_str(), rxValue.length());
+
     }
+    
+
+
+
   }
 
   void onRead(BLECharacteristic *pCharacteristic) {
-    Serial.println("**** READ CHAR *****");
-    uint8_t *char_tmp_value = new uint8_t[3];
-    
-    char_tmp_value[0] = 0x0a;
-    char_tmp_value[1] = 0x0b;
-    char_tmp_value[2] = 0x0c;
-
-    
+    Serial.println("**** READ CONFIG *****");
+   
     pCharacteristic->setValue(footSwitchController.getBinConfiguration(), sizeof(FootSwitchController::ControllerConfiguration));
   }
 
@@ -243,7 +255,20 @@ void setup() {
   Serial.println("Starting BLE Server");
   BLEDevice::init("FLR_MIDI_Board");
 
-  BLEServer *pServer = BLEDevice::createServer();
+  pServer = BLEDevice::createServer();
+
+  class MyServerCallbacks: public BLEServerCallbacks {
+      void onConnect(BLEServer* pServer) {
+        bleDeviceConnected = true;
+      };
+
+      void onDisconnect(BLEServer* pServer) {
+        bleDeviceConnected = false;
+      }
+  };
+
+  pServer->setCallbacks(new MyServerCallbacks());
+
   BLEService *pServiceMidi = pServer->createService(SERVICE_MIDI_UUID);
   pCharacteristicMidi = pServiceMidi->createCharacteristic(
                                          CHARACTERISTIC_MIDI_UUID,
@@ -262,7 +287,6 @@ void setup() {
   
   pCharacteristicConfiguration->setCallbacks(new ConfigCallbacks());
   
-
 
   BLEService *pServiceBattery = pServer->createService(SERVICE_BATTERY_UUID);
 
@@ -289,15 +313,33 @@ void setup() {
 
 
 void loop() {
-  for (uint8_t idx = 0; idx<fs_number; idx++) {
 
-    if (footswitchArray[idx].checkHold(millis())) {
-      process_hold_event(idx+1);
+  if (bleDeviceConnected) {
+    for (uint8_t idx = 0; idx<fs_number; idx++) {
+
+      if (footswitchArray[idx].checkHold(millis())) {
+        process_hold_event(idx+1);
+      }
     }
-  }
-  
-  //TODO: gestire il caso di HOLD_REPEAT !!!
+
+    //TODO: gestire il caso di HOLD_REPEAT !!!
 
   
-  delay(50);
+		delay(10); // bluetooth stack will go into congestion, if too many packets are sent
+	}
+
+  // disconnecting
+  if (!bleDeviceConnected && oldBleDeviceConnected) {
+        delay(500); // give the bluetooth stack the chance to get things ready
+        pServer->startAdvertising(); // restart advertising
+        Serial.println(" BLEstart advertising");
+        oldBleDeviceConnected = bleDeviceConnected;
+    }
+  // connecting
+  if (bleDeviceConnected && !oldBleDeviceConnected) {
+    Serial.println("BLE Connecting");
+    // do stuff here on connecting
+    oldBleDeviceConnected = bleDeviceConnected;
+  }
+
 }

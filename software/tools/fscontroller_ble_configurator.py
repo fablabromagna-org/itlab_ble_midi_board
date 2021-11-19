@@ -30,7 +30,28 @@ class FSControllerBle:
             new_file.write(current_config)
             
         
+    async def write_config_bin(self, device_address, bin_filename):
+        bin_config = bytearray()
+        
+        # for i in range(1,100):
+        #     bin_config.append(i)
+            
+        try:
+            f = open(bin_filename, 'rb')
+            while (rbyte := f.read(1)):
+                bin_config += rbyte
 
+        except IOError:
+            print('Error Opening the file!')
+            return
+        
+
+        print(bin_config)
+        
+        async with BleakClient(device_address) as client:
+            await client.write_gatt_char(self.CONFIG_UUID, bin_config)        
+            
+        
 
 
 if __name__ == "__main__":
@@ -60,6 +81,8 @@ if __name__ == "__main__":
     parser.add_argument('--read_config_bin', type=str, default='',
                     help='Read config from device and store it on passed file')
 
+    parser.add_argument('--write_config_bin', type=str, default='',
+                    help='Write the binary config content of passed file to device')
 
     parser.add_argument('--write_config_json', type=str, default='',
                     help='Convert the JSON passed file to bin and write to device')
@@ -74,8 +97,12 @@ if __name__ == "__main__":
             print("You need to specify the device")
         else:
             if (args.read_config_bin):
-                pass
                 asyncio.run(FSControllerBle().read_config(args.device, args.read_config_bin))
+            elif (args.write_config_bin):
+                asyncio.run(FSControllerBle().write_config_bin(args.device, args.write_config_bin))
+                
+                
+                
             else:
                 parser.print_help()
 
