@@ -96,13 +96,19 @@ if __name__ == "__main__":
         if (len(args.device) <= 0):
             print("You need to specify the device")
         else:
-            if (args.read_config_bin):
+            if (args.read_name):
+                print("no yet implemented")
+            elif (args.write_name):
+                print("no yet implemented")
+           
+            elif (args.read_config_bin):
                 asyncio.run(FSControllerBle().read_config(args.device, args.read_config_bin))
             elif (args.write_config_bin):
                 asyncio.run(FSControllerBle().write_config_bin(args.device, args.write_config_bin))
                 
-                
-                
+            elif (args.write_config_json):
+                print("no yet implemented")
+           
             else:
                 parser.print_help()
 
