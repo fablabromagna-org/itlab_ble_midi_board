@@ -1,5 +1,6 @@
 #ifndef MIDI_HELPER
 #define MIDI_HELPER
+#include <Arduino.h>
 
 class MidiHelper {
 public:
@@ -29,6 +30,13 @@ public:
    static bool buildMidiCommand(MidiHelper::MidiMessageType type, __UINT8_TYPE__ midi_channel, __UINT8_TYPE__ midi_cmd_nr, __UINT8_TYPE__ midi_cmd_value, MidiMessage* midi_message) {
          //  TODO: inserire il controllo sul range dei comandi 
 
+        Serial.println("QUI ARRIVO__2___?");
+        Serial.println(midi_channel);
+        Serial.println(midi_cmd_nr);
+        Serial.println(midi_cmd_value);
+
+
+
         // TODO: gestire meglio check array
         midi_message->content[0] = 0x80;
         midi_message->content[1] = 0x80;
@@ -38,6 +46,7 @@ public:
         
         midi_message->length = 5;
 
+        Serial.println("QUI ARRIVO__3___?");
         //midi_message = midiPacketTemplate;
         return true;
     }

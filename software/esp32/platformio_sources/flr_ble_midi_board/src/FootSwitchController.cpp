@@ -76,8 +76,17 @@ MidiHelper::MidiMessage FootSwitchController::processEvent(uint8_t fs_id, FootSw
 
     //TODO: check anche dell'indice massimo!
     if (fs_id > 0) {
+        Serial.println("Process event fs");
+        Serial.println("fs_id");
+        
+
         if (event == FootSwitch::FootSwitchEvent::FS_TAP) {
+            Serial.println("is a TAP event");
+            
             config_detail = this->controllerConfiguration.footSwitchConfiguration[fs_id-1].config_tap;
+            
+            Serial.println(config_detail.midi_type);
+            Serial.println(config_detail.midi_nr);
         }
         else if (event == FootSwitch::FootSwitchEvent::FS_HOLD) {
             config_detail = this->controllerConfiguration.footSwitchConfiguration[fs_id-1].config_hold;
@@ -103,11 +112,14 @@ MidiHelper::MidiMessage FootSwitchController::processEvent(uint8_t fs_id, FootSw
             break;
         }
 
+        Serial.println("QUI ARRIVO_____?");
         if (!MidiHelper::buildMidiCommand(midi_type, config_detail.midi_ch, config_detail.midi_nr, midi_val , &ret_message) ) {
             ret_message.length = 0;
         }
 
+        Serial.println("MSG MIDI ____");
 
+        Serial.println(ret_message.length);
     }
     return ret_message;
 
@@ -115,7 +127,7 @@ MidiHelper::MidiMessage FootSwitchController::processEvent(uint8_t fs_id, FootSw
 
 
 
-MidiHelper::MidiMessage FootSwitchController::processEvent1(uint8_t fs_id, FootSwitch::FootSwitchEvent event){
+MidiHelper::MidiMessage FootSwitchController::processEventOld(uint8_t fs_id, FootSwitch::FootSwitchEvent event){
     
     static MidiHelper::MidiMessage ret_message;
 

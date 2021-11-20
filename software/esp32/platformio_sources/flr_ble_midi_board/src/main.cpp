@@ -127,7 +127,8 @@ void send_midi_command(MidiHelper::MidiMessageType msg_type, u_char midi_channel
 
 
 void process_tap_event(uint8_t fs_nr) {
-  Serial.println ("Processing TAP Event   " + fs_nr); 
+  Serial.print ("Processing TAP Event   " ); 
+  Serial.println ( fs_nr); 
 
   // TODO: gestire invio MIDI sulla base della configurazione
   //send_midi_command(MidiHelper::MIDI_CC, 1 , 12, 1);
@@ -136,7 +137,7 @@ void process_tap_event(uint8_t fs_nr) {
 
   Serial.print(footSwitchController.debugThis());
   
-  send_midi_command(footSwitchController.processEvent1(fs_nr, FootSwitch::FS_TAP));
+  // send_midi_command(footSwitchController.processEvent1(fs_nr, FootSwitch::FS_TAP));
 }
 
 void process_hold_event(uint8_t fs_nr) {
@@ -316,7 +317,6 @@ void loop() {
 
   if (bleDeviceConnected) {
     for (uint8_t idx = 0; idx<fs_number; idx++) {
-
       if (footswitchArray[idx].checkHold(millis())) {
         process_hold_event(idx+1);
       }
@@ -325,7 +325,6 @@ void loop() {
     //TODO: gestire il caso di HOLD_REPEAT !!!
 
   
-		delay(10); // bluetooth stack will go into congestion, if too many packets are sent
 	}
 
   // disconnecting
@@ -341,5 +340,7 @@ void loop() {
     // do stuff here on connecting
     oldBleDeviceConnected = bleDeviceConnected;
   }
+
+  delay(50); // bluetooth stack will go into congestion, if too many packets are sent
 
 }

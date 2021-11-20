@@ -61,6 +61,7 @@ public:
     } FootSwitchConfiguration;
 
     typedef struct ControllerConfiguration {
+        uint8_t ctrl_char_start;
         char ble_name[32] = "FLR BLE MIDI Controller";
         uint8_t version_major;
         uint8_t version_minor;
@@ -68,6 +69,7 @@ public:
         uint8_t ble_mode;
         FootSwitchConfiguration footSwitchConfiguration[FS_NR_MAX];
 
+        uint8_t ctrl_char_end;
         //TODO: valutare se gestire array dinamico sulla base di footswitch_nr
     } ControllerConfiguration;
 
@@ -78,7 +80,7 @@ public:
 
     uint8_t* getBinConfiguration();
     MidiHelper::MidiMessage processEvent(uint8_t fs_id, FootSwitch::FootSwitchEvent event);
-    MidiHelper::MidiMessage processEvent1(uint8_t fs_id, FootSwitch::FootSwitchEvent event);
+    MidiHelper::MidiMessage processEventOld(uint8_t fs_id, FootSwitch::FootSwitchEvent event);
     bool isValid();
 
     char* debugThis() {
