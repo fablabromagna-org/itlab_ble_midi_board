@@ -36,31 +36,154 @@
 */
 
 #include <Arduino.h>
-#include <BLEDevice.h>
-#include <BLEUtils.h>
-#include <BLEServer.h>
-#define SERVICE_UUID        "03b80e5a-ede8-4b33-a751-6ce34ec4c700"  // The MIDI Service
-#define CHARACTERISTIC_UUID "7772e5db-3868-4112-a1a9-f2669d106bf3"  // The MIDI Characteristic
+#include <NimBLEDevice.h>
+#include <Wire.h>
+#include <LiquidCrystal.h>
+#include "ota/ota.hpp"
+
+#define MAX_OTA_PROGRESS 100
+#define MAX_NUMBER_OF_LCD_CHARS 16
+
+#define SERVICE_UUID "03b80e5a-ede8-4b33-a751-6ce34ec4c700"        // The MIDI Service
+#define CHARACTERISTIC_UUID "7772e5db-3868-4112-a1a9-f2669d106bf3" // The MIDI Characteristic
+
+#define OTA_SERVICE_UUID "fb1e4001-54ae-4a28-9f74-dfccb248601d"
+#define OTA_CHARACTERISTIC_UUID_RX "fb1e4001-54ae-4a28-9f74-dfccb248601d"
+#define OTA_CHARACTERISTIC_UUID_TX "fb1e4001-54ae-4a28-9f74-dfccb248601d"
+
+#define BUILTINLED 2
 
 const int midi_channel = 1;
 
-const int buttonPin1 = 36;     
-const int buttonPin2 = 39;
+const int buttonPin1 = 34;
+const int buttonPin2 = 35;
+const int VCC3v3 = 23;
 
-const int cc_code_btn1 = 0x20;     
-const int cc_code_btn2 = 0x21;     
-const int cc_code_btn3 = 0x22;     
+const int cc_code_btn1 = 0x20;
+const int cc_code_btn2 = 0x21;
+const int cc_code_btn3 = 0x22;
 
 BLECharacteristic *pCharacteristic;
+BLECharacteristic *otaCharacteristic;
+
 int cc_code_prev = 0;
 
+enum MODES
+{
+  NORMAL_MODE,
+  UPDATE_MODE,
+  OTA_MODE
+};
+
+bool deviceConnected = false;
+uint8_t updater[16384];
+uint8_t updater2[16384];
+
+int MODE = NORMAL_MODE;
+
+LiquidCrystal lcd(14, 27, 26, 25, 33, 32);
 
 uint8_t midiPacket[] = {
-   0x80,  // header
-   0x80,  // timestamp, not implemented 
-   0x00,  // status
-   0x3c,  // data - key note: 0x3c == 60 == middle c
-   0x00   // velocity
+    0x80, // header
+    0x80, // timestamp, not implemented
+    0x00, // status
+    0x3c, // data - key note: 0x3c == 60 == middle c
+    0x00  // velocity
+};
+
+void onOtaProgress(int progress)
+{
+  lcd.setCursor(0, 0);
+  lcd.print("Updating");
+  lcd.setCursor(0, 1);
+
+  int numberOfHash = progress / (MAX_OTA_PROGRESS / MAX_NUMBER_OF_LCD_CHARS);
+  for (size_t i = 0; i < numberOfHash; i++)
+  {
+    lcd.print("#");
+  }
+}
+
+void onOtaFinished(bool isSuccessful, int error)
+{
+  lcd.setCursor(0, 0);
+
+  if (isSuccessful)
+  {
+    lcd.print("Update success!");
+  }
+  else
+  {
+    lcd.print("Update failed..");
+  }
+  lcd.setCursor(0, 1);
+  for (int i = 0; i < 5; i++)
+  {
+    lcd.printf("Restart in: %d", 5 - i);
+    delay(1000);
+  }
+}
+
+OtaManager otaManager(onOtaFinished, onOtaProgress);
+
+class ServerCallbacks : public BLEServerCallbacks
+{
+  void onConnect(BLEServer *pServer)
+  {
+    deviceConnected = true;
+    Serial.println("Device connected");
+    digitalWrite(BUILTINLED, HIGH);
+  }
+  void onDisconnect(BLEServer *pServer)
+  {
+    deviceConnected = false;
+    Serial.println("Device disconnected");
+    digitalWrite(BUILTINLED, LOW);
+  }
+};
+
+class OTACallbacks : public BLECharacteristicCallbacks
+{
+  void onRead(BLECharacteristic *pCharacteristic)
+  {
+    Serial.print(pCharacteristic->getUUID().toString().c_str());
+    Serial.print(": onRead(), value: ");
+    Serial.println(pCharacteristic->getValue().c_str());
+  };
+
+  void onNotify(BLECharacteristic *pCharacteristic)
+  {
+    //uint8_t* pData;
+    std::string pData = pCharacteristic->getValue();
+    int len = pData.length();
+    //        Serial.print("Notify callback for characteristic ");
+    //        Serial.print(pCharacteristic->getUUID().toString().c_str());
+    //        Serial.print(" of data length ");
+    //        Serial.println(len);
+    Serial.print("TX  ");
+    for (int i = 0; i < len; i++)
+    {
+      Serial.printf("%02X ", pData[i]);
+    }
+    Serial.println();
+  }
+
+  void onWrite(BLECharacteristic *pCharacteristic)
+  {
+    //uint8_t* pData;
+    std::string pData = pCharacteristic->getValue();
+    // Serial.print("Write callback for characteristic ");
+    // Serial.print(pCharacteristic->getUUID().toString().c_str());
+    // Serial.print(" of data length ");
+    // Serial.println(len);
+    // Serial.print("RX  ");
+    // for (int i = 0; i < len; i++)
+    // { // leave this commented
+    //   Serial.printf("%02X ", data[i]);
+    // }
+    // Serial.println();
+    otaManager.onOTADataReceived(pData);
+  }
 };
 
 /**
@@ -76,85 +199,110 @@ uint8_t midiPacket[] = {
  *    0 -> switch released
  * 
  */
-void setup() {
-Serial.begin(115200);
+void setup()
+{
+  Serial.begin(115200);
   Serial.println("Starting BLE work!");
 
+  lcd.begin(16, 2);
+  lcd.print("ITLAB MIDI BLE");
+
   /** Init the DIGITAL INPUT **/
-  pinMode(buttonPin1, INPUT);
-  pinMode(buttonPin2, INPUT);
+  pinMode(BUILTINLED, OUTPUT);
+  pinMode(buttonPin1, INPUT_PULLUP);
+  pinMode(buttonPin2, INPUT_PULLUP);
+  pinMode(VCC3v3, OUTPUT);
+  digitalWrite(VCC3v3, HIGH);
 
-
-  /** Init the BLE Service **/ 
+  /** Init the BLE Service **/
   BLEDevice::init("ITLabMIDI_Board");
+  BLEDevice::setMTU(517);
+  BLEDevice::setPower(ESP_PWR_LVL_P9);
   BLEServer *pServer = BLEDevice::createServer();
+  BLEService *otaService = pServer->createService(OTA_SERVICE_UUID);
+  otaCharacteristic = otaService->createCharacteristic(
+      OTA_CHARACTERISTIC_UUID_TX,
+      NIMBLE_PROPERTY::READ |
+          NIMBLE_PROPERTY::NOTIFY |
+          NIMBLE_PROPERTY::WRITE_NR |
+          NIMBLE_PROPERTY::WRITE);
+
+  otaCharacteristic->setCallbacks(new OTACallbacks());
+  otaCharacteristic->addDescriptor(new BLE2904());
+
   BLEService *pService = pServer->createService(SERVICE_UUID);
   pCharacteristic = pService->createCharacteristic(
-                                         CHARACTERISTIC_UUID,
-                                         BLECharacteristic::PROPERTY_READ |
-                                         BLECharacteristic::PROPERTY_NOTIFY |
-                                         BLECharacteristic::PROPERTY_WRITE_NR
-                                       );
+      CHARACTERISTIC_UUID,
+      NIMBLE_PROPERTY::READ |
+          NIMBLE_PROPERTY::NOTIFY |
+          NIMBLE_PROPERTY::WRITE_NR);
 
+  otaService->start();
   pService->start();
+  pServer->start();
+
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  //pAdvertising->addServiceUUID(OTA_SERVICE_UUID);
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pAdvertising->setScanResponse(true);
-  pAdvertising->setMinPreferred(0x06);  // functions that help with iPhone connections issue
+  pAdvertising->setMinPreferred(0x06); // functions that help with iPhone connections issue
   pAdvertising->setMinPreferred(0x12);
-  BLEDevice::startAdvertising();
+  pAdvertising->start();
   Serial.println("Characteristic defined! Now you can read it in your phone!");
 }
 
-void loop() {
+void loop()
+{
 
-  int buttonState1 = !digitalRead(buttonPin1);
-  int buttonState2 = !digitalRead(buttonPin2);
-  int cc_code = 0;
+  if (MODE == NORMAL_MODE)
+  {
+    int buttonState1 = !digitalRead(buttonPin1);
+    int buttonState2 = !digitalRead(buttonPin2);
+    int cc_code = 0;
 
+    if (!buttonState1 && !buttonState2)
+    {
+      cc_code = cc_code_btn3;
+    }
+    else if (!buttonState1)
+    {
+      cc_code = cc_code_btn1;
+    }
+    else if (!buttonState2)
+    {
+      cc_code = cc_code_btn2;
+    }
 
-  Serial.println("Button state"); 
-  Serial.println(buttonState1); 
-  Serial.println(buttonState2); 
+    if ((cc_code > 0) && (cc_code != cc_code_prev))
+    {
+      /** Send the CC MIDI message ON **/
+      midiPacket[2] = 0xB0 + midi_channel - 1; // CC on channel midi_channel
+      midiPacket[3] = cc_code;                 // Control number
+      midiPacket[4] = 0x01;                    // Control value
+      Serial.println("sending MIDI packet ...");
 
- 
-  if (!buttonState1 && !buttonState2) {
-    cc_code = cc_code_btn3;
+      pCharacteristic->setValue(midiPacket, 5); // packet, length in bytes
+      pCharacteristic->notify();
+      vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
+    if ((cc_code == 0) && (cc_code_prev > 0))
+    {
+
+      /** Send the CC MIDI message OFF **/
+      midiPacket[2] = 0xB0 + midi_channel - 1; // CC on channel midi_channel
+      midiPacket[3] = cc_code_prev;            // Control number
+      midiPacket[4] = 0x00;                    // Control value
+      Serial.println("sending MIDI packet ...");
+
+      pCharacteristic->setValue(midiPacket, 5); // packet, length in bytes
+      pCharacteristic->notify();
+      vTaskDelay(100 / portTICK_PERIOD_MS);
+
+      otaCharacteristic->setValue(midiPacket, 5);
+      otaCharacteristic->notify();
+    }
+    cc_code_prev = cc_code;
+
+    delay(50);
   }
-  else if(!buttonState1) {
-    cc_code = cc_code_btn1;
-  }
-  else if(!buttonState2) {
-    cc_code = cc_code_btn2;
-  }
-  
-  if ((cc_code > 0) && (cc_code != cc_code_prev)) {
-    /** Send the CC MIDI message ON **/
-    midiPacket[2] = 0xB0 + midi_channel -1; // CC on channel midi_channel
-    midiPacket[3] = cc_code; // Control number
-    midiPacket[4] = 0x01;    // Control value
-    Serial.println("sending MIDI packet ..."); 
-    
-    pCharacteristic->setValue(midiPacket, 5); // packet, length in bytes
-    pCharacteristic->notify();
-    vTaskDelay(100/portTICK_PERIOD_MS);
- 
-  }
-  if ((cc_code == 0) && ( cc_code_prev>0)) {
-    
-    /** Send the CC MIDI message OFF **/
-    midiPacket[2] = 0xB0 + midi_channel - 1; // CC on channel midi_channel
-    midiPacket[3] = cc_code_prev; // Control number
-    midiPacket[4] = 0x00;         // Control value
-    Serial.println("sending MIDI packet ..."); 
-    
-    pCharacteristic->setValue(midiPacket, 5); // packet, length in bytes
-    pCharacteristic->notify();
-    vTaskDelay(100/portTICK_PERIOD_MS);
-
-  }
-  cc_code_prev = cc_code;
-
-
-  delay(50);
 }
