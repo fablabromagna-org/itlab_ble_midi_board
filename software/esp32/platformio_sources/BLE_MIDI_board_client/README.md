@@ -1,6 +1,8 @@
 BLE_MIDI_board_client.ino
 ===============================
 
+** These subdirectory is now to be considered obsolete **
+
 This is the Arduino source code for ESP32, acting as MIDI BLE client.
 This is the first attemp to control my NUX MIGHTY PLUG without using the Smartphone app.
 

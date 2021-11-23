@@ -1,9 +1,25 @@
 # The Software
 
-## Microcontroller Firmware
-We program the ESP32 using Arduino IDE and libraries. 
+This subfolder contains software implmentation for both Firmware and PC/Mobile sides.
 
-> May be we will do some test with PlatformIO or Micropython too.
+You can find additional informations in README files contained in each subfolder.
+
+* **esp32:**  the device firmware for Espressif ESP32 
+* **tools:**  software tools and utility for PC, used to test and debug the firmware and to program the device configuration
+
+
+
+----
+
+## Microcontroller Firmware
+We program the ESP32 using VSCode (or Code-OSS) and PlatformIO IDE and libraries. 
+
+For BLE management we use BLE Arduino Library, but some testing branches are also using NimBLE.
+
+Refer to README files in the software subfolders for details.
+
+
+> May be we will do some test with Micropython / CircuitPython too.
 
 
 
