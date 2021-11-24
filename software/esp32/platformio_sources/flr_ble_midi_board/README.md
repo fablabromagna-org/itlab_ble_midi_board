@@ -1,10 +1,10 @@
-# BLE MIDI footwitch board - ESP32 Firmware
+# BLE MIDI footswitch board - ESP32 Firmware
 
-Firmware for BLE MIDI footwitch controller using ESP32 microcontroller.
+Firmware for BLE MIDI footswitch controller using ESP32 microcontroller.
 
 ## General description
 
-> In this documentation we use the abbreviation FS in place of Foot Switch(es)
+> In this documentation we use the abbreviation FS in place of FootSwitch(es)
 
 This is the C++ firmware for BLE MIDI controller based on ESP32 chip. 
 
