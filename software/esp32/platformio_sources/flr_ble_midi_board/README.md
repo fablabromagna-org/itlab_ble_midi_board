@@ -138,8 +138,6 @@ Here the details of the binary configuration:
 |15     |  1|Val min variable 4         |minimum value for internal variable 4   |
 |16     |  1|Val max variable 4         |maximum value for internal variable 4   |
 |17     |  1|cycle variable 4           |Cycle when rached min/max value: 0=off / 1=on  |
-
-
 |**TAP Config. for FS1**       |   | ||
 |18     |  1|FS Ctrl start byte        |fixed to 0x80   |
 |19     |  1|event          |1=single / 2=repeat / 3=increment / 4=on-off  |
