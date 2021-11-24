@@ -160,6 +160,12 @@ Here the details of the binary configuration:
 |35     |  1|intval_step    |absolute number of step  to increment/decrement (increment event only) |
 |36     |  1|cycle          |Cycle when rached min/max value: 0=off / 1=on  (increment event only) |
 |37     |  1|FS  Ctrl end byte      |fixed to 0x88   |
-
+|**repeat for FS2** |||
+|...|||
+|**repeat for FS3** |||
+|...|||
+|**repeat for FSn** |||
+|...|||
+|n-1    |  1|Ctrl end byte           |fixed to 0xff  |
 
 > _*... repeat from byte 6 to byte 37 for each FS (the total nr of FS is defined on byte 2)*_ 
