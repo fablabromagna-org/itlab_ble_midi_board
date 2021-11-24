@@ -22,11 +22,11 @@ The actions associated to each footswitch can be programmed via Bluethoot.
 
 
 The firmware implements a series of BLE services, and related BLE characteristics :
-* The MIDI BLE Service
+* **The MIDI BLE Service**
     * The MIDI BLE Characteristic (R/NOTIFY)
-* The Device Configuration BLE Service
+* **The Device Configuration BLE Service**
     * The Footswitches Configuration BLE Characteristic (R/W/NOTIFY)
-* The Battery BLE Service
+* **The Battery BLE Service**
     * The Battery Level BLE Service BLE Characteristic (R/NOTIFY)
 
 
@@ -84,7 +84,7 @@ In this first version, only MIDI over BLE is used, but in the future we can use 
 ----
 
 
-## How the OTA footswithes configuration works
+## How the OTA footswitches configuration works
 
 ### Introduction
 
@@ -118,14 +118,15 @@ In addition, some control bytes are inserted to better identify some data area a
 
 Here the details of the binary configuration:
 
-|BYTE NR|LEN|FIELD                     |NOTES          |
+|  BYTE NR  |LEN|FIELD                     |NOTES          |
+|-------|---|--------------------------|---------------|
 |0      |  1|Ctrl start byte           |fixed to 0xf0  |
 |1      | 32|Device name for BLE Adv.  |use only max 31 bytes |
 |2      |  1|Number of Footswitces  |   |
 |3      |  1|Firmware release Major Nr |   |
 |4      |  1|Firmware release Minor Nr |   |
 |5      |  1|BLE Mode                  |1=server / 2=client   |
-| TAP Configuration for FS1 |
+|**TAP Config. for FS1**       |   | ||
 |6      |  1|FS Ctrl start byte        |fixed to 0x80   |
 |7      |  1|event          |1=single / 2=repeat / 3=increment / 4=on-off  |
 |8      |  1|midi_ch        |MIDI channel 0-127   |
@@ -142,7 +143,7 @@ Here the details of the binary configuration:
 |19     |  1|intval_step    |absolute number of step  to increment/decrement (increment event only) |
 |20     |  1|cycle          |Cycle when rached min/max value: 0=off / 1=on  (increment event only) |
 |21     |  1|FS  Ctrl end byte      |fixed to 0x88   |
-| HOLD Configuration for FS1 |
+|**HOLD Config. for FS1** |||
 |22      |  1|FS Ctrl start byte        |fixed to 0x80   |
 |23     |  1|event          |1=single / 2=repeat / 3=increment / 4=on-off  |
 |24     |  1|midi_ch        |MIDI channel 0-127   |
@@ -159,4 +160,6 @@ Here the details of the binary configuration:
 |35     |  1|intval_step    |absolute number of step  to increment/decrement (increment event only) |
 |36     |  1|cycle          |Cycle when rached min/max value: 0=off / 1=on  (increment event only) |
 |37     |  1|FS  Ctrl end byte      |fixed to 0x88   |
-| ... repeat from byte 6 to byte 37 for each FS (the total nr of FS is defined on byte 2) |
+
+
+> _*... repeat from byte 6 to byte 37 for each FS (the total nr of FS is defined on byte 2)*_ 
