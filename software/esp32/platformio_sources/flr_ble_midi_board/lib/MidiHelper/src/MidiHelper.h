@@ -30,10 +30,10 @@ public:
    static bool buildMidiCommand(MidiHelper::MidiMessageType type, __UINT8_TYPE__ midi_channel, __UINT8_TYPE__ midi_cmd_nr, __UINT8_TYPE__ midi_cmd_value, MidiMessage* midi_message) {
          //  TODO: inserire il controllo sul range dei comandi 
 
-        Serial.println("QUI ARRIVO__2___?");
-        Serial.println(midi_channel);
-        Serial.println(midi_cmd_nr);
-        Serial.println(midi_cmd_value);
+        // Serial.println("QUI ARRIVO__2___?");
+        // Serial.println(midi_channel);
+        // Serial.println(midi_cmd_nr);
+        // Serial.println(midi_cmd_value);
 
 
 
@@ -46,7 +46,7 @@ public:
         
         midi_message->length = 5;
 
-        Serial.println("QUI ARRIVO__3___?");
+        // Serial.println("QUI ARRIVO__3___?");
         //midi_message = midiPacketTemplate;
         return true;
     }
