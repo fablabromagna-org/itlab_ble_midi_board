@@ -126,40 +126,48 @@ Here the details of the binary configuration:
 |3      |  1|Firmware release Major Nr |   |
 |4      |  1|Firmware release Minor Nr |   |
 |5      |  1|BLE Mode                  |1=server / 2=client   |
+|6      |  1|Val min variable 1         |minimum value for internal variable 1   |
+|7      |  1|Val max variable 1         |maximum value for internal variable 1   |
+|8      |  1|cycle variable 1           |Cycle when rached min/max value: 0=off / 1=on  |
+|9      |  1|Val min variable 2         |minimum value for internal variable 2   |
+|10     |  1|Val max variable 2         |maximum value for internal variable 2   |
+|11     |  1|cycle variable 2           |Cycle when rached min/max value: 0=off / 1=on  |
+|12     |  1|Val min variable 3         |minimum value for internal variable 3   |
+|13     |  1|Val max variable 3         |maximum value for internal variable 3   |
+|14     |  1|cycle variable 3           |Cycle when rached min/max value: 0=off / 1=on  |
+|15     |  1|Val min variable 4         |minimum value for internal variable 4   |
+|16     |  1|Val max variable 4         |maximum value for internal variable 4   |
+|17     |  1|cycle variable 4           |Cycle when rached min/max value: 0=off / 1=on  |
+
+
 |**TAP Config. for FS1**       |   | ||
-|6      |  1|FS Ctrl start byte        |fixed to 0x80   |
-|7      |  1|event          |1=single / 2=repeat / 3=increment / 4=on-off  |
-|8      |  1|midi_ch        |MIDI channel 0-127   |
-|9      |  1|midi_type      |MIDI message type: 1=CC / 2=PC |
-|10     |  1|midi_nr        |MIDI number of CC/PC   |
-|11     |  1|midi_value_on  |MIDI value to send   |
-|12     |  1|midi_value_off |MIDI value to send (on-off event only)  |
-|13     |  1|not used       |   |
-|14     |  1|group_idx      |Group index: 1-4 (on-off event only)   |
-|15     |  1|intval_idx     |Internal value index: 1-4 (increment event only)  |
-|16     |  1|intval_min     |Minimum value for internal value (increment event only)  |
-|17     |  1|intval_max     |Maximum value for internal value (increment event only)  |
-|18     |  1|positive_step  |1=positive step / 0=negative step (increment event only) |
-|19     |  1|intval_step    |absolute number of step  to increment/decrement (increment event only) |
-|20     |  1|cycle          |Cycle when rached min/max value: 0=off / 1=on  (increment event only) |
-|21     |  1|FS  Ctrl end byte      |fixed to 0x88   |
+|18     |  1|FS Ctrl start byte        |fixed to 0x80   |
+|19     |  1|event          |1=single / 2=repeat / 3=increment / 4=on-off  |
+|20     |  1|midi_ch        |MIDI channel 0-127   |
+|21     |  1|midi_type      |MIDI message type: 1=CC / 2=PC |
+|22     |  1|midi_nr        |MIDI number of CC/PC   |
+|23     |  1|midi_value_on  |MIDI value to send   |
+|24     |  1|midi_value_off |MIDI value to send (on-off event only)  |
+|25     |  1|not used       |   |
+|26     |  1|group_idx      |Group index: 1-4 (on-off event only)   |
+|27     |  1|intval_idx     |Internal value index: 1-4 (increment event only)  |
+|28     |  1|positive_step  |1=positive step / 0=negative step (increment event only) |
+|29     |  1|intval_step    |absolute number of step  to increment/decrement (increment event only) |
+|30     |  1|FS  Ctrl end byte      |fixed to 0x88   |
 |**HOLD Config. for FS1** |||
-|22      |  1|FS Ctrl start byte        |fixed to 0x80   |
-|23     |  1|event          |1=single / 2=repeat / 3=increment / 4=on-off  |
-|24     |  1|midi_ch        |MIDI channel 0-127   |
-|25     |  1|midi_type      |MIDI message type: 1=CC / 2=PC |
-|26     |  1|midi_nr        |MIDI number of CC/PC   |
-|27     |  1|midi_value_on  |MIDI value to send   |
-|28     |  1|midi_value_off |MIDI value to send (on-off event only)  |
-|29     |  1|repeat_interval|interval repeat time (msec*10) for repeat or increment events    |
-|30     |  1|group_idx      |Group index: 1-4 (on-off event only)   |
-|31     |  1|intval_idx     |Internal value index: 1-4 (increment event only)  |
-|32     |  1|intval_min     |Minimum value for internal value (increment event only)  |
-|33     |  1|intval_max     |Maximum value for internal value (increment event only)  |
-|34     |  1|positive_step  |1=positive step / 0=negative step (increment event only) |
-|35     |  1|intval_step    |absolute number of step  to increment/decrement (increment event only) |
-|36     |  1|cycle          |Cycle when rached min/max value: 0=off / 1=on  (increment event only) |
-|37     |  1|FS  Ctrl end byte      |fixed to 0x88   |
+|31     |  1|FS Ctrl start byte        |fixed to 0x80   |
+|32     |  1|event          |1=single / 2=repeat / 3=increment / 4=on-off  |
+|33     |  1|midi_ch        |MIDI channel 0-127   |
+|34     |  1|midi_type      |MIDI message type: 1=CC / 2=PC |
+|35     |  1|midi_nr        |MIDI number of CC/PC   |
+|36     |  1|midi_value_on  |MIDI value to send   |
+|37     |  1|midi_value_off |MIDI value to send (on-off event only)  |
+|38     |  1|repeat_interval|interval repeat time (msec*10) for repeat or increment events    |
+|39     |  1|group_idx      |Group index: 1-4 (on-off event only)   |
+|40     |  1|intval_idx     |Internal value index: 1-4 (increment event only)  |
+|41     |  1|positive_step  |1=positive step / 0=negative step (increment event only) |
+|42     |  1|intval_step    |absolute number of step  to increment/decrement (increment event only) |
+|43     |  1|FS  Ctrl end byte      |fixed to 0x88   |
 |**repeat for FS2** |||
 |...|||
 |**repeat for FS3** |||
@@ -168,4 +176,4 @@ Here the details of the binary configuration:
 |...|||
 |n-1    |  1|Ctrl end byte           |fixed to 0xff  |
 
-> _*... repeat from byte 6 to byte 37 for each FS (the total nr of FS is defined on byte 2)*_ 
+> _*... repeat from byte 18 to byte 43 for each FS (the total nr of FS is defined on byte 2)*_ 
