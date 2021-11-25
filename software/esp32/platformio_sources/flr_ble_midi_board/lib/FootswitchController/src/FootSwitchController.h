@@ -5,9 +5,10 @@
 #include <ArduinoJson.h>
 #include <FootSwitch.h>
 
-# define VARS_NR 4
-# define GROUPS_NR 4
-# define FS_NR_MAX 8
+#define VARS_NR 4
+#define GROUPS_NR 4
+#define FS_NR_MAX 8
+#define INT_VAR_MAX 4
 
 class FootSwitchController {
 
@@ -45,11 +46,8 @@ public:
         uint8_t repeat_interval;
         uint8_t group_idx;
         uint8_t intval_idx;
-        uint8_t intval_min;
-        uint8_t intval_max;
         uint8_t positive_step;
         uint8_t intval_step;
-        uint8_t cycle;
         uint8_t end = 0x88;
     } FootSwitchConfigurationDetail;
 
@@ -60,13 +58,20 @@ public:
         FootSwitchConfigurationDetail  config_hold;
     } FootSwitchConfiguration;
 
+    typedef struct InternalVariableConfiguration {
+        uint8_t val_min;
+        uint8_t val_max;
+        uint8_t cycle;
+    } InternalVariableConfiguration;
+
     typedef struct ControllerConfiguration {
         uint8_t ctrl_char_start;
         char ble_name[32] = "FLR BLE MIDI Controller";
         uint8_t version_major;
         uint8_t version_minor;
-        uint8_t  footswitch_nr = 0;
         uint8_t ble_mode;
+        uint8_t  footswitch_nr = 0;
+        InternalVariableConfiguration internalVariableConfiguration[INT_VAR_MAX];
         FootSwitchConfiguration footSwitchConfiguration[FS_NR_MAX];
 
         uint8_t ctrl_char_end;

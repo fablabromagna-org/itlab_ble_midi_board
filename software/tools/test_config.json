@@ -1,9 +1,30 @@
 {
     "config_name": "test1_NUX",
-    "firmwave_version": 0.1,
-    
+    "firmwave_version": 5.9,
     "footswitch_nr": 4,
     "ble_mode": "server",
+    "internal_values": [
+        {
+            "min":0,
+            "max":6,
+            "cycle":true
+        },
+        {
+            "min":0,
+            "max":127,
+            "cycle":false
+        },
+        {
+            "min":0,
+            "max":0,
+            "cycle":false
+        },
+        {
+            "min":0,
+            "max":0,
+            "cycle":false
+        }
+    ],
     "fs_config": [
         {
             "fs_id": 1,
@@ -18,11 +39,8 @@
             "hold": {
                 "event":"increment",
                 "variable": 1,
-                "min": 0,
-                "max":6,
                 "step":1,
                 "interval":1000,
-                "cycle":true,
                 "midi_channel": 1,
                 "midi_type": "cc",
                 "midi_nr": 49,
@@ -34,10 +52,7 @@
             "tap": {
                 "event":"increment",
                 "variable": 1,
-                "min": 0,
-                "max":6,
                 "step":-1,
-                "cycle":true,
                 "midi_channel": 1,
                 "midi_type": "cc",
                 "midi_nr": 49,
@@ -46,11 +61,8 @@
             "hold": {
                 "event":"increment",
                 "variable": 1,
-                "min": 0,
-                "max":6,
                 "step":-1,
                 "interval":1000,
-                "cycle":true,
                 "midi_channel": 1,
                 "midi_type": "cc",
                 "midi_nr": 49,

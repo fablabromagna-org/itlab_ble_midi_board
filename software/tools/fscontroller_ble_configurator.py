@@ -9,7 +9,7 @@ import time
 import asyncio
 from bleak import BleakScanner
 from bleak import BleakClient
-
+from fscontroller_config_converter import FSControllerConfigParser
 
 
 class FSControllerBle:
@@ -63,12 +63,10 @@ if __name__ == "__main__":
     parser.add_argument('--scan', action='store_true',
                     help='Scan for BLE devices')
     
-    
-    
     parser.add_argument('--read_name', action='store_true',
                     help='Read the BLE controller name')
 
-    parser.add_argument('--write_name', type=str, default='FLR_MIDI_Board',
+    parser.add_argument('--write_name', type=str, default='',
                     help='Read the BLE controller name (max 30 chars)')
 
 
@@ -97,9 +95,9 @@ if __name__ == "__main__":
             print("You need to specify the device")
         else:
             if (args.read_name):
-                print("no yet implemented")
+                print("no yet implemented 1")
             elif (args.write_name):
-                print("no yet implemented")
+                print("no yet implemented 2")
            
             elif (args.read_config_bin):
                 asyncio.run(FSControllerBle().read_config(args.device, args.read_config_bin))
@@ -107,8 +105,13 @@ if __name__ == "__main__":
                 asyncio.run(FSControllerBle().write_config_bin(args.device, args.write_config_bin))
                 
             elif (args.write_config_json):
-                print("no yet implemented")
-           
+                bin_config = FSControllerConfigParser().process_config(2, args.write_config_json)
+
+                bin_config_file = args.write_config_json + ".bin"
+                new_file = open(bin_config_file, "wb")
+                new_file.write(bin_config)
+                new_file.close()
+                asyncio.run(FSControllerBle().write_config_bin(args.device, bin_config_file))                
             else:
                 parser.print_help()
 

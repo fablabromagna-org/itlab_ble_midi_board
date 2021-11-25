@@ -8,7 +8,6 @@ import json
 import argparse
 
 
-
 class FSControllerConfigParser:
     ### Mode:
     # 1: read JSON file, output as C init variable
@@ -28,22 +27,33 @@ class FSControllerConfigParser:
         with open(filename) as f:
             data = json.load(f)
         
+        
+        frame_out = bytearray()
+        frame_out.append(0xf0)
+        
         # json to bin
-        str_name = "FLR BLE MIDI Controller"
-        enc_str = str_name.encode()
-        frame_out = bytearray(enc_str)
+        str_name = data["config_name"]
+        for bytenr in str_name.encode():
+            frame_out.append(bytenr)
         for i in range(32 - len(str_name)):
             frame_out.append(0x00)
         
-        # TODO: da gestire
-        # per ora fisso... poi vedremo
-        # version
-        frame_out.append(1)
-        frame_out.append(2)
+        versions = str(data["firmwave_version"]).split('.')
+        frame_out.append(int(versions[0]))
+        frame_out.append(int(versions[1]))
+        
+        frame_out.append(1 if (data["ble_mode"] == "server") else 2 )
         
         frame_out.append(data["footswitch_nr"])
         
-        frame_out.append(1 if (data["ble_mode"] == "server") else 2 )
+        for i in range(4):
+            int_value = data["internal_values"][i]
+            frame_out.append(int_value["min"])
+            frame_out.append(int_value["max"])
+            frame_out.append(0x01 if int_value["cycle"] else 0x00)
+
+            
+
         for fsnr in range(data["footswitch_nr"]):
             fs_config = data["fs_config"][fsnr]
             # frame_out.append(fs_config["fs_id"])
@@ -61,7 +71,7 @@ class FSControllerConfigParser:
                     frame_out.append(detail_config["midi_nr"])    # midi_nr
                     frame_out.append(detail_config["midi_value"])    # midi_value_on
                     
-                    for i in range(9):
+                    for i in range(6):
                         frame_out.append(0x00)
 
                 
@@ -72,14 +82,9 @@ class FSControllerConfigParser:
                     frame_out.append(detail_config["midi_nr"])    # midi_nr
                     frame_out.append(detail_config["midi_value"])    # midi_value_on
                     frame_out.append(0x00)    # midi_value_off
-                    
-                    # interval_bytes = detail_config["interval"].to_bytes(2, byteorder='big', signed=True)
-                    # frame_out.append(interval_bytes[0])    # repeat_interval
-                    # frame_out.append(interval_bytes[1])    # repeat_interval
-
                     frame_out.append(detail_config["interval"]/10)
                     
-                    for i in range(6):
+                    for i in range(3):
                         frame_out.append(0x00)
                     
                 elif detail_config["event"] == "increment":
@@ -92,22 +97,13 @@ class FSControllerConfigParser:
 
                     try :
                         frame_out.append(detail_config["interval"]/10)
-                        # interval_bytes = detail_config["interval"].to_bytes(2, byteorder='big', signed=True)
                     except :
                         frame_out.append(0x00)
-                        # interval_bytes = 0x00.to_bytes(2, byteorder='big', signed=True)
                 
-                    # frame_out.append(interval_bytes[0])    # repeat_interval
-                    # frame_out.append(interval_bytes[1])    # repeat_interval
-
                     frame_out.append(0x00)    # group_idx
                     frame_out.append(detail_config["variable"])    # intval_idx
-                    frame_out.append(detail_config["min"])    # intval_min
-                    frame_out.append(detail_config["max"])    # intval_max
-                    
                     frame_out.append(1 if detail_config["step"] > 0 else 0)    # intval_step is positive?
                     frame_out.append(abs(detail_config["step"]))    # intval_step
-                    frame_out.append(0x01 if detail_config["cycle"] else 0x00)    # uint8_t cycle;
                     
 
                 elif detail_config["event"] == "on_off":
@@ -121,18 +117,18 @@ class FSControllerConfigParser:
                     frame_out.append(0x00)    # repeat_interval
                     frame_out.append(detail_config["group"])    # group_idx
                     frame_out.append(0x00)    # intval_idx
-                    frame_out.append(0x00)    # intval_min
-                    frame_out.append(0x00)    # intval_max
                     frame_out.append(0x00)    # intval_step
-                    frame_out.append(0x00)    # uint8_t cycle;
                     
                 else:
-                    for i in range(14):
+                    for i in range(11):
                         frame_out.append(0x00)
                 
             
                 # Control byte
                 frame_out.append(0x88)
+
+        # Control byte
+        frame_out.append(0xff)
         
         return frame_out
             
