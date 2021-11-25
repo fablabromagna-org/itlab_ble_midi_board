@@ -122,10 +122,10 @@ Here the details of the binary configuration:
 |-------|---|--------------------------|---------------|
 |0      |  1|Ctrl start byte           |fixed to 0xf0  |
 |1      | 32|Device name for BLE Adv.  |use only max 31 bytes |
-|2      |  1|Number of Footswitces  |   |
-|3      |  1|Firmware release Major Nr |   |
-|4      |  1|Firmware release Minor Nr |   |
-|5      |  1|BLE Mode                  |1=server / 2=client   |
+|2      |  1|Firmware release Major Nr |   |
+|3      |  1|Firmware release Minor Nr |   |
+|4      |  1|BLE Mode                  |1=server / 2=client   |
+|5      |  1|Number of Footswitces     |   |
 |6      |  1|Val min variable 1         |minimum value for internal variable 1   |
 |7      |  1|Val max variable 1         |maximum value for internal variable 1   |
 |8      |  1|cycle variable 1           |Cycle when reached min/max value: 0=off / 1=on  |
