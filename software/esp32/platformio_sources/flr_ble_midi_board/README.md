@@ -128,16 +128,16 @@ Here the details of the binary configuration:
 |5      |  1|BLE Mode                  |1=server / 2=client   |
 |6      |  1|Val min variable 1         |minimum value for internal variable 1   |
 |7      |  1|Val max variable 1         |maximum value for internal variable 1   |
-|8      |  1|cycle variable 1           |Cycle when rached min/max value: 0=off / 1=on  |
+|8      |  1|cycle variable 1           |Cycle when reached min/max value: 0=off / 1=on  |
 |9      |  1|Val min variable 2         |minimum value for internal variable 2   |
 |10     |  1|Val max variable 2         |maximum value for internal variable 2   |
-|11     |  1|cycle variable 2           |Cycle when rached min/max value: 0=off / 1=on  |
+|11     |  1|cycle variable 2           |Cycle when reached min/max value: 0=off / 1=on  |
 |12     |  1|Val min variable 3         |minimum value for internal variable 3   |
 |13     |  1|Val max variable 3         |maximum value for internal variable 3   |
-|14     |  1|cycle variable 3           |Cycle when rached min/max value: 0=off / 1=on  |
+|14     |  1|cycle variable 3           |Cycle when reached min/max value: 0=off / 1=on  |
 |15     |  1|Val min variable 4         |minimum value for internal variable 4   |
 |16     |  1|Val max variable 4         |maximum value for internal variable 4   |
-|17     |  1|cycle variable 4           |Cycle when rached min/max value: 0=off / 1=on  |
+|17     |  1|cycle variable 4           |Cycle when reached min/max value: 0=off / 1=on  |
 |**TAP Config. for FS1**       |   | ||
 |18     |  1|FS Ctrl start byte        |fixed to 0x80   |
 |19     |  1|event          |1=single / 2=repeat / 3=increment / 4=on-off  |
