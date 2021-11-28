@@ -76,9 +76,6 @@ enum MODES
 };
 
 bool deviceConnected = false;
-uint8_t updater[16384];
-uint8_t updater2[16384];
-
 int MODE = NORMAL_MODE;
 
 LiquidCrystal lcd(14, 27, 26, 25, 33, 32);
@@ -237,6 +234,7 @@ void setup()
           NIMBLE_PROPERTY::NOTIFY |
           NIMBLE_PROPERTY::WRITE_NR);
 
+  pServer->setCallbacks(new ServerCallbacks());
   otaService->start();
   pService->start();
   pServer->start();
@@ -297,9 +295,6 @@ void loop()
       pCharacteristic->setValue(midiPacket, 5); // packet, length in bytes
       pCharacteristic->notify();
       vTaskDelay(100 / portTICK_PERIOD_MS);
-
-      otaCharacteristic->setValue(midiPacket, 5);
-      otaCharacteristic->notify();
     }
     cc_code_prev = cc_code;
 
