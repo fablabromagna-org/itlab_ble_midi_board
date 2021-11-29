@@ -5,6 +5,20 @@
 #include <ArduinoJson.h>
 #include <FootSwitch.h>
 
+
+#define USE_SPIFFS //comment to use FFat
+
+#ifdef USE_SPIFFS
+#include <SPIFFS.h>
+#define FLASH SPIFFS
+#define FASTMODE false //SPIFFS write is slow
+#else
+#define FLASH FFat
+#define FASTMODE true //FFat is faster
+#endif
+
+
+
 #define VARS_NR 4
 #define GROUPS_NR 4
 #define FS_NR_MAX 8
@@ -103,6 +117,8 @@ private:
     uint8_t midiGroups[GROUPS_NR];
 
     bool valid_config;
+
+    static const char *FS_CONFIG_FILENAME;
     
 };
 

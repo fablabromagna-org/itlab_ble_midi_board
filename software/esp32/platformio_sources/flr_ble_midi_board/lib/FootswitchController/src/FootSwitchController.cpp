@@ -1,10 +1,26 @@
 #include <FootSwitchController.h>
 #include <Arduino.h>
 
+const char *FootSwitchController::FS_CONFIG_FILENAME = "/fs_config.bin";
+
+
 FootSwitchController::FootSwitchController() {
     jsonConfiguration = new DynamicJsonDocument(2048);
 
 
+}
+
+
+/** Load bin fs configuration from storage, if exists **/
+bool FootSwitchController::loadBinaryConfiguration() {
+    bool ret = false;
+
+    if (FLASH.exists(FS_CONFIG_FILENAME)) {
+    try {
+        File fsCfgFile = FLASH.open(FS_CONFIG_FILENAME, FILE_READ);
+        fsCfgFile.write(bin_config, bin_config_len);    
+    
+    }
 }
 
 bool FootSwitchController::processBinaryConfiguration(uint8_t* bin_config, size_t bin_config_len) {
@@ -13,7 +29,17 @@ bool FootSwitchController::processBinaryConfiguration(uint8_t* bin_config, size_
 
     if (bin_config_len <= sizeof(controllerConfiguration)) {
 
+        
         memcpy(&controllerConfiguration, bin_config, bin_config_len);
+
+        // save to storage
+        // if (FLASH.exists(FS_CONFIG_FILENAME))
+        // {
+        //     FLASH.remove(FS_CONFIG_FILENAME);
+        // }
+        File fsCfgFile = FLASH.open(FS_CONFIG_FILENAME, FILE_WRITE);
+        fsCfgFile.write(bin_config, bin_config_len);
+        fsCfgFile.close();
 
         //controllerConfiguration = (ControllerConfiguration)bin_config;
 

@@ -188,12 +188,10 @@ hardware_interrupt isrArray[] =
   {fs_input_pin[3], isr4}
 };
 
-
+/** The BLE charact. callback to process new incoming device configuration and send the current one **/
 class ConfigCallbacks: public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic *pCharacteristic) {
     Serial.println("**** WRITE CONFIG *****");
-
-    // std::string value = pCharacteristic->getValue();
 
     uint8_t config_bin[512];
     uint8_t *data_in;
