@@ -1,0 +1,119 @@
+{
+    "config_name": "test1_NUX",
+    "firmwave_version": 5.9,
+    "footswitch_nr": 4,
+    "ble_mode": "server",
+    "internal_values": [
+        {
+            "min":0,
+            "max":6,
+            "cycle":true
+        },
+        {
+            "min":0,
+            "max":127,
+            "cycle":false
+        },
+        {
+            "min":0,
+            "max":0,
+            "cycle":false
+        },
+        {
+            "min":0,
+            "max":0,
+            "cycle":false
+        }
+    ],
+    "fs_config": [
+        {
+            "fs_id": 1,
+            "tap": {
+                "event":"single",
+                "midi_channel": 1,
+                "midi_type": "cc",
+                "midi_nr": 49,
+                "midi_value": 3,
+                "midi_descr":"preset_channel 3"
+            },
+            "hold": {
+                "event":"increment",
+                "variable": 1,
+                "step":1,
+                "interval":1000,
+                "midi_channel": 1,
+                "midi_type": "cc",
+                "midi_nr": 49,
+                "midi_descr":"preset_channel"
+            }
+        },
+        {
+            "fs_id": 2,
+            "tap": {
+                "event":"increment",
+                "variable": 1,
+                "step":-1,
+                "midi_channel": 1,
+                "midi_type": "cc",
+                "midi_nr": 49,
+                "midi_descr":"preset_channel"
+            },
+            "hold": {
+                "event":"increment",
+                "variable": 1,
+                "step":-1,
+                "interval":1000,
+                "midi_channel": 1,
+                "midi_type": "cc",
+                "midi_nr": 49,
+                "midi_descr":"preset_channel"
+            }
+        },
+        {
+            "fs_id": 3,
+            "tap": {
+                "event":"on_off",
+                "group": 1,
+                "midi_channel": 1,
+                "midi_type": "cc",
+                "midi_nr": 84,
+                "midi_value_on": 1,
+                "midi_value_off": 0,
+                "midi_descr":"EFX effect enable"
+                
+            },
+            "hold": {
+                "event":"none"
+
+            }
+        },
+        {
+            "fs_id": 4,
+            "tap": {
+                "event":"on_off",
+                "group": 2,
+                "midi_channel": 1,
+                "midi_type": "cc",
+                "midi_nr": 28,
+                "midi_value_on": 1,
+                "midi_value_off": 0,
+                "midi_descr":"Delay enable"
+
+            },
+            "hold": {
+                "event":"on_off",
+                "group": 3,
+                "led":false,
+                "midi_channel": 1,
+                "midi_type": "cc",
+                "midi_nr": 122,
+                "midi_value_on": 1,
+                "midi_value_off": 0,
+                "midi_descr":"Drum machine enable"
+                
+
+            }
+        }
+    ]
+
+}
