@@ -24,15 +24,15 @@ private:
     int processedParts = 0;
     static const char *OTA_FILENAME;
     void writeOtaPacket(const char *bytes, int size);
+    function<void(float)> onProgessUpdate;
     void updateSystem();
-    function<void(int)> onProgessUpdate;
     function<void(bool, int)> onOtaFinished;
     static const int INFO_PACKET_COMMAND = 0xFF;
     static const int NEXT_PACKET = 0xFC;
     static const int LAST_PACKET = 0xFE;
 
 public:
-    OtaManager(function<void(bool, int)> onOtaFinished, function<void(int)> onProgessUpdate = NULL);
+    OtaManager(function<void(bool, int)> onOtaFinished, function<void(float)> onProgessUpdate = NULL);
     void onOTADataReceived(string data);
 
     enum OTA_ERROR

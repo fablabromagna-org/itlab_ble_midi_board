@@ -88,17 +88,19 @@ uint8_t midiPacket[] = {
     0x00  // velocity
 };
 
-void onOtaProgress(int progress)
+void onOtaProgress(float progress)
 {
   lcd.setCursor(0, 0);
-  lcd.print("Updating");
+  lcd.println("Updating");
   lcd.setCursor(0, 1);
 
-  int numberOfHash = progress / (MAX_OTA_PROGRESS / MAX_NUMBER_OF_LCD_CHARS);
+  int numberOfHash = progress * MAX_NUMBER_OF_LCD_CHARS;
   for (size_t i = 0; i < numberOfHash; i++)
   {
     lcd.print("#");
   }
+  Serial.print("Updating progress: ");
+  Serial.println(progress);
 }
 
 void onOtaFinished(bool isSuccessful, int error)
@@ -113,12 +115,13 @@ void onOtaFinished(bool isSuccessful, int error)
   {
     lcd.print("Update failed..");
   }
-  lcd.setCursor(0, 1);
   for (int i = 0; i < 5; i++)
   {
+    lcd.setCursor(0, 1);
     lcd.printf("Restart in: %d", 5 - i);
     delay(1000);
   }
+  ESP.restart();
 }
 
 OtaManager otaManager(onOtaFinished, onOtaProgress);
