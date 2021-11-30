@@ -71,8 +71,7 @@ int cc_code_prev = 0;
 enum MODES
 {
   NORMAL_MODE,
-  UPDATE_MODE,
-  OTA_MODE
+  UPDATE_FINISHED
 };
 
 bool deviceConnected = false;
@@ -106,7 +105,6 @@ void onOtaProgress(float progress)
 void onOtaFinished(bool isSuccessful, int error)
 {
   lcd.setCursor(0, 0);
-
   if (isSuccessful)
   {
     lcd.print("Update success!");
@@ -121,7 +119,8 @@ void onOtaFinished(bool isSuccessful, int error)
     lcd.printf("Restart in: %d", 5 - i);
     delay(1000);
   }
-  ESP.restart();
+  //don't restart ESP here, otherwise app will not receive last ack of ota packet
+  MODE = UPDATE_FINISHED;
 }
 
 OtaManager otaManager(onOtaFinished, onOtaProgress);
@@ -209,10 +208,13 @@ void setup()
 
   /** Init the DIGITAL INPUT **/
   pinMode(BUILTINLED, OUTPUT);
-  pinMode(buttonPin1, INPUT_PULLUP);
-  pinMode(buttonPin2, INPUT_PULLUP);
+  pinMode(buttonPin1, INPUT);
+  pinMode(buttonPin2, INPUT);
   pinMode(VCC3v3, OUTPUT);
   digitalWrite(VCC3v3, HIGH);
+
+  //turn off led
+  digitalWrite(BUILTINLED, LOW);
 
   /** Init the BLE Service **/
   BLEDevice::init("ITLabMIDI_Board");
@@ -302,5 +304,9 @@ void loop()
     cc_code_prev = cc_code;
 
     delay(50);
+  }
+  else if (MODE == UPDATE_FINISHED)
+  {
+    ESP.restart();
   }
 }
