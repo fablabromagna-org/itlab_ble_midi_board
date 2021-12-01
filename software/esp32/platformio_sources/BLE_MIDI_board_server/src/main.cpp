@@ -48,8 +48,7 @@
 #define CHARACTERISTIC_UUID "7772e5db-3868-4112-a1a9-f2669d106bf3" // The MIDI Characteristic
 
 #define OTA_SERVICE_UUID "fb1e4001-54ae-4a28-9f74-dfccb248601d"
-#define OTA_CHARACTERISTIC_UUID_RX "fb1e4001-54ae-4a28-9f74-dfccb248601d"
-#define OTA_CHARACTERISTIC_UUID_TX "fb1e4001-54ae-4a28-9f74-dfccb248601d"
+#define OTA_CHARACTERISTIC_UUID "fb1e4001-54ae-4a28-9f74-dfccb248601d"
 
 #define BUILTINLED 2
 
@@ -223,7 +222,7 @@ void setup()
   BLEServer *pServer = BLEDevice::createServer();
   BLEService *otaService = pServer->createService(OTA_SERVICE_UUID);
   otaCharacteristic = otaService->createCharacteristic(
-      OTA_CHARACTERISTIC_UUID_TX,
+      OTA_CHARACTERISTIC_UUID,
       NIMBLE_PROPERTY::READ |
           NIMBLE_PROPERTY::NOTIFY |
           NIMBLE_PROPERTY::WRITE_NR |
