@@ -2,7 +2,7 @@
 #define FOOTSWITCH_CONTROLLER_H
 
 #include <MidiHelper.h>
-#include <ArduinoJson.h>
+// #include <ArduinoJson.h>
 #include <FootSwitch.h>
 
 
@@ -94,14 +94,13 @@ public:
 
 
     FootSwitchController(void);
-    bool processBinaryConfiguration(uint8_t* bin_config, size_t bin_config_size);
-    bool processJsonConfiguration(char* json_config_str);
+    bool processBinaryConfiguration(uint8_t* bin_config, size_t bin_config_size, bool save_flash);
 
     uint8_t* getBinConfiguration();
     MidiHelper::MidiMessage processEvent(uint8_t fs_id, FootSwitch::FootSwitchEvent event);
-    MidiHelper::MidiMessage processEventOld(uint8_t fs_id, FootSwitch::FootSwitchEvent event);
     bool isValid();
-
+    bool loadBinaryConfiguration();
+    
     char* debugThis() {
         FootSwitchConfigurationDetail config_detail;
         
@@ -110,7 +109,7 @@ public:
         return (char*)&config_detail;
     }
 private:
-    DynamicJsonDocument *jsonConfiguration;
+    // DynamicJsonDocument *jsonConfiguration;
     ControllerConfiguration controllerConfiguration;
 
     uint8_t midiVarsValues[VARS_NR];
@@ -119,6 +118,7 @@ private:
     bool valid_config;
 
     static const char *FS_CONFIG_FILENAME;
+
     
 };
 
