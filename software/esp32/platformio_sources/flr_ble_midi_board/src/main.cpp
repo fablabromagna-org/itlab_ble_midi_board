@@ -45,7 +45,6 @@
 #include <FootSwitch.h>
 #include <FootSwitchController.h>
 
-#include <test_config.h>
 
 #define SERVICE_MIDI_UUID        "03b80e5a-ede8-4b33-a751-6ce34ec4c700"  // The MIDI Service
 #define CHARACTERISTIC_MIDI_UUID "7772e5db-3868-4112-a1a9-f2669d106bf3"  // The MIDI Characteristic
@@ -188,12 +187,10 @@ hardware_interrupt isrArray[] =
   {fs_input_pin[3], isr4}
 };
 
-
+/** The BLE charact. callback to process new incoming device configuration and send the current one **/
 class ConfigCallbacks: public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic *pCharacteristic) {
     Serial.println("**** WRITE CONFIG *****");
-
-    // std::string value = pCharacteristic->getValue();
 
     uint8_t config_bin[512];
     uint8_t *data_in;
@@ -209,7 +206,7 @@ class ConfigCallbacks: public BLECharacteristicCallbacks {
         Serial.print(rxValue[i]);
 
       //TODO: important!!! insert some check of packet (integrity and well formed packet)
-      footSwitchController.processBinaryConfiguration((uint8_t*)rxValue.c_str(), rxValue.length());
+      footSwitchController.processBinaryConfiguration((uint8_t*)rxValue.c_str(), rxValue.length(), true);
 
     }
     
@@ -233,9 +230,12 @@ void setup() {
 
   Serial.println("FablabRomagna BLE MIDI Controller");
 
-  // footSwitchController.processJsonConfiguration(my_json_config);
+// Launch SPIFFS file system  
+  if(!SPIFFS.begin()){ 
+    Serial.println("An Error has occurred while mounting SPIFFS");  
+  }
 
-  footSwitchController.processBinaryConfiguration(my_bin_config, sizeof(my_bin_config));
+  footSwitchController.loadBinaryConfiguration();
 
 
   footswitchArray = new FootSwitch[fs_number]; 

@@ -32,7 +32,7 @@
                 "event":"single",
                 "midi_channel": 1,
                 "midi_type": "cc",
-                "midi_nr": 49,
+                "midi_nr": 50,
                 "midi_value": 3,
                 "midi_descr":"preset_channel 3"
             },
