@@ -33,40 +33,43 @@
                 "midi_channel": 1,
                 "midi_type": "cc",
                 "midi_nr": 50,
-                "midi_value": 3,
-                "midi_descr":"preset_channel 3"
+                "midi_value": 1,
+                "midi_descr":"test"
             },
             "hold": {
-                "event":"increment",
+                "event":"single",
                 "variable": 1,
                 "step":1,
                 "interval":1000,
                 "midi_channel": 1,
                 "midi_type": "cc",
-                "midi_nr": 49,
-                "midi_descr":"preset_channel"
+                "midi_nr": 50,
+                "midi_value": 10,
+                "midi_descr":"test"
             }
         },
         {
             "fs_id": 2,
             "tap": {
-                "event":"increment",
+                "event":"single",
                 "variable": 1,
                 "step":-1,
                 "midi_channel": 1,
                 "midi_type": "cc",
-                "midi_nr": 49,
-                "midi_descr":"preset_channel"
+                "midi_nr": 50,
+                "midi_value": 2,
+                "midi_descr":"test"
             },
             "hold": {
-                "event":"increment",
+                "event":"single",
                 "variable": 1,
                 "step":-1,
                 "interval":1000,
                 "midi_channel": 1,
                 "midi_type": "cc",
-                "midi_nr": 49,
-                "midi_descr":"preset_channel"
+                "midi_nr": 52,
+                "midi_value": 3,
+                "midi_descr":"test"
             }
         },
         {

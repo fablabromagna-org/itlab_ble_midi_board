@@ -56,6 +56,11 @@
 #define CHARACTERISTIC_BATTERY_UUID BLEUUID((uint16_t)0x2A19)
 
 
+typedef  enum FsEvent {
+        FS_EVENT_NONE,
+        FS_EVENT_TAP,
+        FS_EVENT_HOLD
+    } FsEvent;
 // #define ARRAY_LENGTH(x) (sizeof(x)/sizeof(x[0]))
 
 BLEServer *pServer = NULL;
@@ -69,6 +74,9 @@ const int midi_channel = 1;
 const int fs_number = 4;
 
 // TODO: read from config or assign fixed for max footswitch managed (8?)
+
+volatile int fs_events[fs_number] = {FS_EVENT_NONE, FS_EVENT_NONE, FS_EVENT_NONE, FS_EVENT_NONE};
+
 const int fs_input_pin[fs_number] = {14,27,12,13};
 
 const int fs1_led_pin = 36;     
@@ -93,6 +101,11 @@ struct hardware_interrupt
 
 void send_midi_command(MidiHelper::MidiMessage midi_message) {
     if (midi_message.length > 0) {
+      Serial.println(" MIDI Message: ");
+      Serial.println(midi_message.content[2]);  // CH and TYPE 
+      Serial.println(midi_message.content[3]);  // CC NR
+      Serial.println(midi_message.content[4]);  // CC Value
+
       pCharacteristicMidi->setValue(midi_message.content, midi_message.length); 
       pCharacteristicMidi->notify();
       vTaskDelay(100/portTICK_PERIOD_MS);
@@ -134,7 +147,7 @@ void process_tap_event(uint8_t fs_nr) {
 
   send_midi_command(footSwitchController.processEvent(fs_nr, FootSwitch::FS_TAP));
 
-  Serial.print(footSwitchController.debugThis());
+  //Serial.print(footSwitchController.debugThis());
   
   // send_midi_command(footSwitchController.processEvent1(fs_nr, FootSwitch::FS_TAP));
 }
@@ -142,9 +155,12 @@ void process_tap_event(uint8_t fs_nr) {
 void process_hold_event(uint8_t fs_nr) {
   // TODO: gestire invio MIDI sulla base della configurazione
 
-  Serial.println("Processing HOLD Event   " + fs_nr); 
-
-  send_midi_command(MidiHelper::MIDI_CC, 1, 18, 5);
+  Serial.print("Processing HOLD Event   "); 
+  Serial.println(fs_nr); 
+  send_midi_command(footSwitchController.processEvent(fs_nr, FootSwitch::FS_HOLD));
+  // send_midi_command(MidiHelper::MIDI_CC, 1, 18, 5);
+  
+  //Serial.print(footSwitchController.debugThis());
 }
 
 
@@ -154,19 +170,20 @@ void process_interrupt(uint8_t fs_nr, bool new_state_pressed) {
  
   if ((new_state_pressed)  && (!my_footswitch->isPressed())) {
     if  (my_footswitch->press(millis())) {
-      Serial.println("PRESSED "); 
+      // Serial.println("PRESSED "); 
     }
   }
   else if ((!new_state_pressed)  && (my_footswitch->isPressed())) {
     bool tap_event = false;
 
     if (my_footswitch->release(millis(), &tap_event)) {
-      Serial.println("RELEASED ");
+      // Serial.println("RELEASED ");
     }
 
     if (tap_event) {
-      Serial.println("TAP EVENT");
-      process_tap_event(fs_nr);
+      fs_events[fs_nr] = FS_EVENT_TAP;
+      // Serial.println("TAP EVENT");
+      // process_tap_event(fs_nr);
     }
   }
 }
@@ -319,6 +336,13 @@ void loop() {
     for (uint8_t idx = 0; idx<fs_number; idx++) {
       if (footswitchArray[idx].checkHold(millis())) {
         process_hold_event(idx+1);
+      }
+
+
+      if (fs_events[idx] == FS_EVENT_TAP) {
+        fs_events[idx] = FS_EVENT_NONE;
+        Serial.println("TAP EVENT");
+        process_tap_event(idx);
       }
     }
 

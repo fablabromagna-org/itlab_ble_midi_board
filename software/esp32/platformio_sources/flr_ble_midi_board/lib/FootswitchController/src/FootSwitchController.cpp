@@ -140,8 +140,8 @@ MidiHelper::MidiMessage FootSwitchController::processEvent(uint8_t fs_id, FootSw
             
             config_detail = this->controllerConfiguration.footSwitchConfiguration[fs_id-1].config_tap;
             
-            Serial.println(config_detail.midi_type);
-            Serial.println(config_detail.midi_nr);
+            // Serial.println(config_detail.midi_type);
+            // Serial.println(config_detail.midi_nr);
         }
         else if (event == FootSwitch::FootSwitchEvent::FS_HOLD) {
             Serial.println("is an HOLD event");
@@ -168,12 +168,14 @@ MidiHelper::MidiMessage FootSwitchController::processEvent(uint8_t fs_id, FootSw
             break;
         }
 
-        // Serial.println("QUI ARRIVO_____?");
         if (!MidiHelper::buildMidiCommand(midi_type, config_detail.midi_ch, config_detail.midi_nr, midi_val , &ret_message) ) {
             ret_message.length = 0;
         }
 
-        // Serial.println("MSG MIDI ____");
+        // Serial.print("MSG MIDI :");
+        // Serial.print(midi_type);
+        // Serial.print(config_detail.midi_nr);
+        // Serial.println(midi_val);
         // Serial.println(ret_message.length);
     }
     return ret_message;
