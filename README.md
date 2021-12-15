@@ -5,9 +5,13 @@
 A BLE (Bluetooth Low Energy) MIDI implementation based on ESP32
 
  
-> Note: 
-> this is a working-in-progress project at very early stage. I hope to implement new feature and a new hardware soon
- 
+> **Important:** 
+> this is a working-in-progress project and is in beta stage.
+> 
+> Since we not yet released the first stable version, most of the features works only in develop branch.
+>
+> You can find additional info about the project sources in [```docs/how_to_contribute.md```](docs/how_to_contribute.md) file.
+
  
 ## Description
  
