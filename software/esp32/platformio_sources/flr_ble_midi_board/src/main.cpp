@@ -73,7 +73,7 @@ const int midi_channel = 1;
 const int fs_number = 4;
 
 // TODO: read from config or assign fixed for max footswitch managed (8?)
-const int fs_input_pin[fs_number] = {14, 27, 12, 13};
+const int fs_input_pin[fs_number] = {27, 26, 25, 33};
 
 const int fs1_led_pin = 36;
 const int fs2_led_pin = 39;
@@ -264,7 +264,9 @@ class ConfigCallbacks : public BLECharacteristicCallbacks
   {
     Serial.println("**** READ CONFIG *****");
 
-    pCharacteristic->setValue(footSwitchController.getBinConfiguration(), sizeof(FootSwitchController::ControllerConfiguration));
+    size_t binConfigurationSize = 0;
+    uint8_t *binConfiguration = footSwitchController.getBinConfiguration(&binConfigurationSize);
+    pCharacteristic->setValue(binConfiguration, binConfigurationSize);
   }
 };
 
@@ -320,7 +322,7 @@ void setup()
   Serial.println("FablabRomagna BLE MIDI Controller");
 
   // Launch SPIFFS file system
-  if (!SPIFFS.begin())
+  if (!SPIFFS.begin(true))
   {
     Serial.println("An Error has occurred while mounting SPIFFS");
   }
@@ -332,7 +334,7 @@ void setup()
   /** Init the DIGITAL INPUT **/
   for (int idx = 0; idx < fs_number; idx++)
   {
-    pinMode(fs_input_pin[idx], INPUT);
+    pinMode(fs_input_pin[idx], INPUT_PULLUP);
   }
 
   /** Init the ISR for the footswitches **/
