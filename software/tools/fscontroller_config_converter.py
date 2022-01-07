@@ -82,7 +82,7 @@ class FSControllerConfigParser:
                     frame_out.append(detail_config["midi_nr"])    # midi_nr
                     frame_out.append(detail_config["midi_value"])    # midi_value_on
                     frame_out.append(0x00)    # midi_value_off
-                    frame_out.append(detail_config["interval"]/10)
+                    frame_out.append((int)(detail_config["interval"]/10))
                     
                     for i in range(3):
                         frame_out.append(0x00)

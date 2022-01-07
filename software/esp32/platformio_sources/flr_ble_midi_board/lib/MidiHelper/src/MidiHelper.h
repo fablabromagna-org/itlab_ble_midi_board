@@ -14,6 +14,7 @@ public:
     } MidiOutput;
 
     typedef  enum MidiMessageType {
+        MIDI_NONE,
         MIDI_CC,
         MIDI_PC,
         MIDI_NOTE_ON,

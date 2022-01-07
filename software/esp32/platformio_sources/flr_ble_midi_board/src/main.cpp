@@ -77,12 +77,12 @@ const int fs_number = 4;
 
 volatile int fs_events[fs_number] = {FS_EVENT_NONE, FS_EVENT_NONE, FS_EVENT_NONE, FS_EVENT_NONE};
 
-const int fs_input_pin[fs_number] = {14,27,12,13};
+const int fs_input_pin[fs_number] = {2,4,34,35};
 
-const int fs1_led_pin = 36;     
-const int fs2_led_pin = 39;
-const int fs3_led_pin = 39;
-const int fs4_led_pin = 39;
+const int fs1_led_pin = 16;     
+const int fs2_led_pin = 17;
+const int fs3_led_pin = 25;
+const int fs4_led_pin = 26;
 
 bool bleDeviceConnected = false;
 bool oldBleDeviceConnected = false;
@@ -335,7 +335,7 @@ void loop() {
   if (bleDeviceConnected) {
     for (uint8_t idx = 0; idx<fs_number; idx++) {
       if (footswitchArray[idx].checkHold(millis())) {
-        process_hold_event(idx+1);
+        //process_hold_event(idx+1);
       }
 
 
@@ -344,10 +344,17 @@ void loop() {
         Serial.println("TAP EVENT");
         process_tap_event(idx);
       }
-    }
 
     //TODO: gestire il caso di HOLD_REPEAT !!!
+      if (footswitchArray[idx].isHold()) {
+        //process_hold_event(idx+1);
+      }
 
+      
+
+    }
+
+  
   
 	}
 

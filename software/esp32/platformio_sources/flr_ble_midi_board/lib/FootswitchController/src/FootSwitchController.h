@@ -118,6 +118,7 @@ private:
     bool valid_config;
 
     static const char *FS_CONFIG_FILENAME;
+    unsigned long t_last_repeat_cmd;
 
     
 };

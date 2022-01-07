@@ -24,12 +24,12 @@ public:
 
 
     FootSwitch() {
-        bool pressed = false;
-        bool hold = false;
-        bool group_active = false;
-        unsigned long t_pressed = 0;
-        unsigned long t_released = 0;
-        unsigned long t_last_repeat = 0;
+        pressed = false;
+        fshold = false;
+        group_active = false;
+        t_pressed = 0;
+        t_released = 0;
+        t_last_repeat = 0;
     };
 
     bool isPressed() {return pressed; };
@@ -38,6 +38,7 @@ public:
         bool ret = false;
         if ((t_press - t_released) > DEBOUNCE_TIME) {
             t_pressed = t_press;
+            t_last_repeat = t_press;
             pressed = true;
             ret = true;
         }
@@ -74,6 +75,21 @@ public:
 
         return ret;
     }
+    
+    bool isHold() {
+        return fshold;
+    }
+
+    // bool isRepeated(int repeat_time) {
+    //     bool ret = false;
+
+    //     if (fshold) {
+            
+
+    //     }
+        
+    //     return ret;
+    // }
 
 private:
     bool pressed;

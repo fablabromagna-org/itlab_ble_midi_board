@@ -37,7 +37,7 @@
                 "midi_descr":"test"
             },
             "hold": {
-                "event":"single",
+                "event":"repeat",
                 "variable": 1,
                 "step":1,
                 "interval":1000,

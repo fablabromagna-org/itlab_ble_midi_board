@@ -7,7 +7,8 @@ const char *FootSwitchController::FS_CONFIG_FILENAME = "/fs_config.bin";
 
 FootSwitchController::FootSwitchController() {
     // jsonConfiguration = new DynamicJsonDocument(2048);
-
+    
+    t_last_repeat_cmd = 0;
     
     loadBinaryConfiguration();
 }
@@ -128,25 +129,39 @@ uint8_t* FootSwitchController::getBinConfiguration() {
 MidiHelper::MidiMessage FootSwitchController::processEvent(uint8_t fs_id, FootSwitch::FootSwitchEvent event){
     static MidiHelper::MidiMessage ret_message;
     FootSwitchConfigurationDetail config_detail;
+    config_detail.midi_type = MIDI_TYPE_NONE;
+    ret_message.length = 0;
 
     //TODO: check anche dell'indice massimo!
     if (fs_id > 0) {
         Serial.println("Process event fs");
         Serial.println(fs_id);
-        
 
         if (event == FootSwitch::FootSwitchEvent::FS_TAP) {
             Serial.println("is a TAP event");
             
             config_detail = this->controllerConfiguration.footSwitchConfiguration[fs_id-1].config_tap;
-            
             // Serial.println(config_detail.midi_type);
             // Serial.println(config_detail.midi_nr);
         }
         else if (event == FootSwitch::FootSwitchEvent::FS_HOLD) {
-            Serial.println("is an HOLD event");
-            config_detail = this->controllerConfiguration.footSwitchConfiguration[fs_id-1].config_hold;
+            if (controllerConfiguration.footSwitchConfiguration[fs_id-1].config_hold.event == EVENT_REPEAT) {
+
+            }
+            else {
+                config_detail = this->controllerConfiguration.footSwitchConfiguration[fs_id-1].config_hold;
+            }
+
+
+
+
+            if (millis() - t_last_repeat_cmd >= controllerConfiguration.footSwitchConfiguration[fs_id-1].config_hold.repeat_interval*10 ) {
+                t_last_repeat_cmd = millis();
+                Serial.println("is an HOLD event");
+                config_detail = this->controllerConfiguration.footSwitchConfiguration[fs_id-1].config_hold;
+            }
         }
+
 
         uint8_t midi_val = 0x00;
         MidiHelper::MidiMessageType midi_type;
@@ -156,10 +171,13 @@ MidiHelper::MidiMessage FootSwitchController::processEvent(uint8_t fs_id, FootSw
         else if (config_detail.midi_type == ConfigMidiType::MIDI_TYPE_PC) {
             midi_type = MidiHelper::MidiMessageType::MIDI_PC;
         }
-        //TODO: gestire anche altre tipologie?
+        else if (config_detail.midi_type == ConfigMidiType::MIDI_TYPE_NONE) {
+            midi_type = MidiHelper::MidiMessageType::MIDI_NONE;
+        }
 
         switch (config_detail.event) {
         case FootSwitchController::ConfigEvent::EVENT_SINGLE:
+        case FootSwitchController::ConfigEvent::EVENT_REPEAT:
             midi_val = config_detail.midi_value_on;
             break;
         
