@@ -77,12 +77,12 @@ const int fs_number = 4;
 
 volatile int fs_events[fs_number] = {FS_EVENT_NONE, FS_EVENT_NONE, FS_EVENT_NONE, FS_EVENT_NONE};
 
-const int fs_input_pin[fs_number] = {2,4,34,35};
+const int fs_input_pin[fs_number] = {2,4,34,25};
 
 const int fs1_led_pin = 16;     
 const int fs2_led_pin = 17;
-const int fs3_led_pin = 25;
-const int fs4_led_pin = 26;
+const int fs3_led_pin = 05;
+const int fs4_led_pin = 18;
 
 bool bleDeviceConnected = false;
 bool oldBleDeviceConnected = false;
@@ -181,20 +181,21 @@ void process_interrupt(uint8_t fs_nr, bool new_state_pressed) {
     }
 
     if (tap_event) {
-      fs_events[fs_nr] = FS_EVENT_TAP;
-      // Serial.println("TAP EVENT");
+      fs_events[fs_nr-1] = FS_EVENT_TAP;
+       //Serial.println("###  int - TAP EVENT");
+       //Serial.println(fs_nr);
       // process_tap_event(fs_nr);
     }
   }
 }
 
 void isr1(){
-  // Serial.println("ISR 1");
+  //Serial.println("ISR 1");
   process_interrupt(1, digitalRead(fs_input_pin[0])); 
 }
 void isr2(){ process_interrupt(2, digitalRead(fs_input_pin[1])); }
 void isr3(){ process_interrupt(3, digitalRead(fs_input_pin[2])); }
-void isr4(){ process_interrupt(4, digitalRead(fs_input_pin[3])); }
+void isr4(){process_interrupt(4, digitalRead(fs_input_pin[3])); }
 
 hardware_interrupt isrArray[] = 
 {
@@ -342,7 +343,7 @@ void loop() {
       if (fs_events[idx] == FS_EVENT_TAP) {
         fs_events[idx] = FS_EVENT_NONE;
         Serial.println("TAP EVENT");
-        process_tap_event(idx);
+        process_tap_event(idx+1);
       }
 
     //TODO: gestire il caso di HOLD_REPEAT !!!
